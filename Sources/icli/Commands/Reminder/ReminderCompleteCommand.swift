@@ -7,15 +7,16 @@ enum ReminderCompleteCommand {
             throw ICLIError.missingArgument("id")
         }
 
-        let store = RemindersStore()
-        try store.requestAccess()
-        let count = try await store.completeReminders(ids: ids)
+        let result: CountPayload = try await CompanionClient.shared.send(
+            .reminderComplete,
+            args: ReminderIDsArgs(ids: ids)
+        )
 
         switch format {
         case .human:
-            print("Completed \(count) reminder(s).")
+            print("Completed \(result.count) reminder(s).")
         case .plain:
-            print(count)
+            print(result.count)
         case .json:
             Output.printReminders([], format: .json)
         }

@@ -34,20 +34,11 @@ enum ReminderAddCommand {
             priority = .none
         }
 
-        let store = RemindersStore()
-        try store.requestAccess()
-
-        let listName: String
-        if let flag = listFlag {
-            listName = flag
-        } else if let def = await store.defaultListName() {
-            listName = def
-        } else {
-            throw ICLIError.operationFailed("No default list. Specify --list <name>.")
-        }
-
         let draft = ReminderDraft(title: title, notes: notes, dueDate: dueDate, priority: priority)
-        let item = try await store.createReminder(draft, listName: listName)
+        let item: ReminderItem = try await CompanionClient.shared.send(
+            .reminderAdd,
+            args: ReminderAddArgs(draft: draft, listName: listFlag)
+        )
 
         switch format {
         case .human:

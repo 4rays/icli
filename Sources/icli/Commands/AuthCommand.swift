@@ -1,4 +1,3 @@
-import EventKit
 import Foundation
 
 enum AuthCommand {
@@ -14,7 +13,7 @@ enum AuthCommand {
         case "request":
             try await AuthRequestCommand.run(args: ParsedArgs(args), format: format)
         case "status":
-            AuthStatusCommand.run(format: format)
+            try await AuthStatusCommand.run(format: format)
         default:
             throw ICLIError.operationFailed("Unknown auth command: \(cmd)")
         }

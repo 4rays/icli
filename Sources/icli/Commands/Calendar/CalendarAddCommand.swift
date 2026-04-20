@@ -41,9 +41,10 @@ enum CalendarAddCommand {
             url: url
         )
 
-        let store = CalendarsStore()
-        try store.requestAccess()
-        let event = try await store.createEvent(draft)
+        let event: CalendarEvent = try await CompanionClient.shared.send(
+            .calendarAdd,
+            args: CalendarAddArgs(draft: draft)
+        )
 
         switch format {
         case .human:

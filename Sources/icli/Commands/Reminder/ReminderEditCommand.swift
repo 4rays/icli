@@ -19,9 +19,9 @@ enum ReminderEditCommand {
 
         if let dueStr {
             if dueStr.lowercased() == "none" {
-                update.dueDate = .some(nil)
+                update.clearDueDate = true
             } else if let d = DateParsing.parseUserDate(dueStr) {
-                update.dueDate = .some(d)
+                update.dueDate = d
             } else {
                 throw ICLIError.invalidArgument("Cannot parse date: \(dueStr)")
             }
@@ -34,9 +34,10 @@ enum ReminderEditCommand {
             update.priority = p
         }
 
-        let store = RemindersStore()
-        try store.requestAccess()
-        let item = try await store.updateReminder(id: id, update: update)
+        let item: ReminderItem = try await CompanionClient.shared.send(
+            .reminderEdit,
+            args: ReminderEditArgs(id: id, update: update)
+        )
 
         switch format {
         case .human:

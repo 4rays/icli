@@ -29,9 +29,10 @@ enum CalendarEventsCommand {
             end = cal.date(byAdding: .day, value: 7, to: start)!
         }
 
-        let store = CalendarsStore()
-        try store.requestAccess()
-        let events = try await store.events(start: start, end: end, calendarName: calName)
+        let events: [CalendarEvent] = try await CompanionClient.shared.send(
+            .calendarEvents,
+            args: CalendarEventsArgs(start: start, end: end, calendarName: calName)
+        )
         Output.printEvents(events, format: format)
     }
 }

@@ -5,23 +5,17 @@ enum ReminderListCommand {
         let listName = args.option("--list", "-l")
         let showCompleted = args.hasFlag("--completed", "-c")
 
-        let store = RemindersStore()
-        try store.requestAccess()
-
-        var items = try await store.reminders(in: listName)
-        if !showCompleted {
-            items = items.filter { !$0.isCompleted }
-        }
-
+        let items: [ReminderItem] = try await CompanionClient.shared.send(
+            .reminderList,
+            args: ReminderListArgs(listName: listName, includeCompleted: showCompleted)
+        )
         Output.printReminders(items, format: format)
     }
 }
 
 enum ReminderListsCommand {
     static func run(format: OutputFormat) async throws {
-        let store = RemindersStore()
-        try store.requestAccess()
-        let lists = await store.lists()
+        let lists: [ReminderList] = try await CompanionClient.shared.send(.reminderLists)
         Output.printReminderLists(lists, format: format)
     }
 }

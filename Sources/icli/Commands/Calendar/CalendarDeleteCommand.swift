@@ -6,9 +6,11 @@ enum CalendarDeleteCommand {
             throw ICLIError.missingArgument("id")
         }
 
-        let store = CalendarsStore()
-        try store.requestAccess()
-        try await store.deleteEvent(id: id)
+        _ = try await CompanionClient.shared.send(
+            .calendarDelete,
+            args: CalendarDeleteArgs(id: id),
+            as: CountPayload.self
+        )
 
         switch format {
         case .human:

@@ -7,17 +7,18 @@ enum ReminderDeleteCommand {
             throw ICLIError.missingArgument("id")
         }
 
-        let store = RemindersStore()
-        try store.requestAccess()
-        let count = try await store.deleteReminders(ids: ids)
+        let result: CountPayload = try await CompanionClient.shared.send(
+            .reminderDelete,
+            args: ReminderIDsArgs(ids: ids)
+        )
 
         switch format {
         case .human:
-            print("Deleted \(count) reminder(s).")
+            print("Deleted \(result.count) reminder(s).")
         case .plain:
-            print(count)
+            print(result.count)
         case .json:
-            let payload = ["deleted": count]
+            let payload = ["deleted": result.count]
             let data = try! JSONEncoder().encode(payload)
             print(String(data: data, encoding: .utf8)!)
         }
