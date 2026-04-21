@@ -12,6 +12,8 @@ enum AuthCommand {
         switch cmd {
         case "request":
             try await AuthRequestCommand.run(args: ParsedArgs(args), format: format)
+        case "settings":
+            try await AuthSettingsCommand.run(format: format)
         case "status":
             try await AuthStatusCommand.run(format: format)
         default:
@@ -25,6 +27,7 @@ enum AuthCommand {
 
         COMMANDS:
           request   Request Reminders and/or Calendar permission
+          settings  Open the iCLI settings window
           status    Show current authorization status
 
         OPTIONS for request:

@@ -11,6 +11,11 @@ final class CompanionRequestHandler: @unchecked Sendable {
             }
 
             switch operation {
+            case .appShowSettings:
+                await MainActor.run {
+                    CompanionSettingsWindowController.shared.show()
+                }
+                return try success(request, EmptyArgs())
             case .authStatus:
                 let result = await CompanionAuthorization.status()
                 return try success(request, result)

@@ -1,7 +1,8 @@
 BINARY := icli
 COMPANION_BINARY := icliCompanion
-COMPANION_APP_NAME := iCLI Companion.app
+COMPANION_APP_NAME := iCLI.app
 COMPANION_INFO_PLIST := Sources/icliCompanion/Resources/Info.plist
+COMPANION_ICON := Sources/icliCompanion/Resources/AppIcon.icns
 SOCKET_FILE := $(HOME)/Library/Application Support/icli/companion.sock
 PREFIX ?= $(HOME)/.local
 BINDIR ?= $(PREFIX)/bin
@@ -20,9 +21,10 @@ build:
 package-companion:
 	@echo "Packaging companion app..."
 	@rm -rf "$(BUILD_COMPANION_APP)"
-	@mkdir -p "$(BUILD_COMPANION_APP)/Contents/MacOS"
+	@mkdir -p "$(BUILD_COMPANION_APP)/Contents/MacOS" "$(BUILD_COMPANION_APP)/Contents/Resources"
 	@install -m 755 ".build/release/$(COMPANION_BINARY)" "$(BUILD_COMPANION_APP)/Contents/MacOS/$(COMPANION_BINARY)"
 	@install -m 644 "$(COMPANION_INFO_PLIST)" "$(BUILD_COMPANION_APP)/Contents/Info.plist"
+	@install -m 644 "$(COMPANION_ICON)" "$(BUILD_COMPANION_APP)/Contents/Resources/AppIcon.icns"
 
 install: build
 	@echo "Installing icli to $(LIBEXECDIR)..."

@@ -1,6 +1,7 @@
 import Foundation
 
 public enum CompanionOperation: String, Codable, Sendable {
+    case appShowSettings = "app.showSettings"
     case authStatus = "auth.status"
     case authRequest = "auth.request"
     case reminderList = "reminder.list"
@@ -186,7 +187,7 @@ public enum CompanionErrorCode: String, Sendable {
 }
 
 public enum CompanionPaths {
-    public static let appBundleName = "iCLI Companion.app"
+    public static let appBundleName = "iCLI.app"
     public static let socketFilename = "companion.sock"
 
     public static func supportDirectory(fileManager: FileManager = .default) -> URL {

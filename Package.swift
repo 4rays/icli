@@ -24,7 +24,11 @@ let package = Package(
             name: "icliCompanion",
             dependencies: ["ICliShared"],
             path: "Sources/icliCompanion",
-            exclude: ["Resources/Info.plist"],
+            exclude: [
+                "Resources/AppIcon.icon",
+                "Resources/AppIcon.icns",
+                "Resources/Info.plist",
+            ],
             linkerSettings: [
                 .linkedFramework("AppKit"),
                 .linkedFramework("EventKit"),

@@ -3,13 +3,15 @@
 <plist version="1.0">
 <dict>
     <key>CFBundleIdentifier</key>
-    <string>dev.kaishin.icli.companion</string>
+    <string>net.4rays.icli</string>
     <key>CFBundleName</key>
-    <string>iCLI Companion</string>
+    <string>iCLI</string>
     <key>CFBundleDisplayName</key>
-    <string>iCLI Companion</string>
+    <string>iCLI</string>
     <key>CFBundleExecutable</key>
     <string>icliCompanion</string>
+    <key>CFBundleIconFile</key>
+    <string>AppIcon</string>
     <key>CFBundlePackageType</key>
     <string>APPL</string>
     <key>CFBundleShortVersionString</key>

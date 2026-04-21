@@ -121,7 +121,7 @@ struct CompanionClient: Sendable {
 
         guard let appURL = CompanionLocator.companionAppURL(fileManager: fileManager) else {
             throw ICLIError.operationFailed(
-                "Companion app not found. Reinstall icli or set ICLI_COMPANION_APP to the app bundle path."
+                "iCLI app not found. Reinstall icli or set ICLI_COMPANION_APP to the app bundle path."
             )
         }
 
@@ -143,7 +143,7 @@ struct CompanionClient: Sendable {
     private func launchCompanion(at appURL: URL) throws {
         let process = Process()
         process.executableURL = URL(fileURLWithPath: "/usr/bin/open")
-        process.arguments = ["-g", appURL.path]
+        process.arguments = ["-g", appURL.path, "--args", "--icli-agent"]
         process.standardInput = FileHandle.nullDevice
         process.standardOutput = FileHandle.nullDevice
         let errorPipe = Pipe()
@@ -157,7 +157,7 @@ struct CompanionClient: Sendable {
                 .trimmingCharacters(in: .whitespacesAndNewlines)
             let detail = message.map { ": \($0)" } ?? "."
             throw ICLIError.operationFailed(
-                "Failed to launch companion app with LaunchServices\(detail)"
+                "Failed to launch iCLI app with LaunchServices\(detail)"
             )
         }
     }
