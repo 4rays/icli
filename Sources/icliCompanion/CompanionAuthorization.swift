@@ -3,8 +3,9 @@ import EventKit
 import Foundation
 
 enum CompanionAuthorization {
+    @MainActor
     static func status() -> AuthStatusPayload {
-        AuthStatusPayload(
+        payload(
             reminders: statusLabel(EKEventStore.authorizationStatus(for: .reminder)),
             calendars: statusLabel(EKEventStore.authorizationStatus(for: .event))
         )
@@ -23,7 +24,7 @@ enum CompanionAuthorization {
             calendarsStatus = await requestCalendars()
         }
 
-        return AuthStatusPayload(reminders: remindersStatus, calendars: calendarsStatus)
+        return payload(reminders: remindersStatus, calendars: calendarsStatus)
     }
 
     @MainActor
@@ -89,5 +90,18 @@ enum CompanionAuthorization {
         case .writeOnly: return "write-only"
         @unknown default: return "unknown"
         }
+    }
+
+    private static func payload(reminders: String, calendars: String) -> AuthStatusPayload {
+        AuthStatusPayload(
+            reminders: reminders,
+            calendars: calendars,
+            companion: CompanionDiagnostics(
+                processID: ProcessInfo.processInfo.processIdentifier,
+                bundleIdentifier: Bundle.main.bundleIdentifier,
+                bundlePath: Bundle.main.bundleURL.path,
+                executablePath: Bundle.main.executableURL?.path
+            )
+        )
     }
 }

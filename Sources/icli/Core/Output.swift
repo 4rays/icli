@@ -112,17 +112,32 @@ enum Output {
 
     // MARK: - Auth
 
-    static func printAuthStatus(reminders: String, calendars: String, format: OutputFormat) {
+    static func printAuthStatus(_ payload: AuthStatusPayload, format: OutputFormat) {
+        let debugCompanion = ProcessInfo.processInfo.environment["ICLI_DEBUG_COMPANION"] == "1"
+
         switch format {
         case .human:
-            print("Reminders: \(reminders)")
-            print("Calendars: \(calendars)")
+            print("Reminders: \(payload.reminders)")
+            print("Calendars: \(payload.calendars)")
+            if debugCompanion, let companion = payload.companion {
+                print("Companion PID: \(companion.processID)")
+                print("Companion bundle ID: \(companion.bundleIdentifier ?? "<none>")")
+                print("Companion bundle: \(companion.bundlePath ?? "<none>")")
+                print("Companion executable: \(companion.executablePath ?? "<none>")")
+            }
         case .plain:
-            print("reminders\t\(reminders)")
-            print("calendars\t\(calendars)")
+            print("reminders\t\(payload.reminders)")
+            print("calendars\t\(payload.calendars)")
         case .json:
-            let payload: [String: String] = ["reminders": reminders, "calendars": calendars]
-            printJSON(payload)
+            if debugCompanion {
+                printJSON(payload)
+            } else {
+                let output: [String: String] = [
+                    "reminders": payload.reminders,
+                    "calendars": payload.calendars,
+                ]
+                printJSON(output)
+            }
         }
     }
 

@@ -12,7 +12,8 @@ final class CompanionRequestHandler: @unchecked Sendable {
 
             switch operation {
             case .authStatus:
-                return try success(request, CompanionAuthorization.status())
+                let result = await CompanionAuthorization.status()
+                return try success(request, result)
             case .authRequest:
                 let args = try decodeArgs(request, as: AuthRequestArgs.self)
                 let result = try await CompanionAuthorization.request(args)

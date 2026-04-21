@@ -21,9 +21,25 @@ enum CompanionLocator {
     }
 
     static func currentExecutableURL(
-        arguments: [String] = CommandLine.arguments,
         fileManager: FileManager = .default
     ) -> URL {
+        if let bundleExecutable = Bundle.main.executableURL {
+            return bundleExecutable.resolvingSymlinksInPath().standardizedFileURL
+        }
+
+        var size: UInt32 = 0
+        _ = _NSGetExecutablePath(nil, &size)
+        if size > 0 {
+            var buffer = [CChar](repeating: 0, count: Int(size))
+            if _NSGetExecutablePath(&buffer, &size) == 0 {
+                let path = buffer.prefix { $0 != 0 }.map { UInt8(bitPattern: $0) }
+                return URL(fileURLWithPath: String(decoding: path, as: UTF8.self))
+                    .resolvingSymlinksInPath()
+                    .standardizedFileURL
+            }
+        }
+
+        let arguments = CommandLine.arguments
         let rawPath = arguments.first ?? "icli"
         let baseURL: URL
         if rawPath.hasPrefix("/") {
@@ -55,8 +71,19 @@ struct CompanionClient: Sendable {
             args: try JSONValue.encode(args)
         )
         let requestData = try CompanionCodec.makeEncoder().encode(request)
-        let responseData = try performRequest(requestData)
-        let response = try CompanionCodec.makeDecoder().decode(CompanionResponseEnvelope.self, from: responseData)
+        let responseData = try performRequestWithRetry(
+            requestData,
+            responseTimeout: responseTimeout(for: operation)
+        )
+        let response: CompanionResponseEnvelope
+        do {
+            response = try CompanionCodec.makeDecoder().decode(CompanionResponseEnvelope.self, from: responseData)
+        } catch {
+            let preview = String(data: responseData.prefix(500), encoding: .utf8) ?? "<non-UTF8 response>"
+            throw ICLIError.operationFailed(
+                "Companion returned an invalid response (\(responseData.count) bytes): \(preview)"
+            )
+        }
 
         guard response.ok else {
             let payload = response.error ?? CompanionErrorPayload(
@@ -117,11 +144,21 @@ struct CompanionClient: Sendable {
         let process = Process()
         process.executableURL = URL(fileURLWithPath: "/usr/bin/open")
         process.arguments = ["-g", appURL.path]
+        process.standardInput = FileHandle.nullDevice
+        process.standardOutput = FileHandle.nullDevice
+        let errorPipe = Pipe()
+        process.standardError = errorPipe
         try process.run()
         process.waitUntilExit()
 
         guard process.terminationStatus == 0 else {
-            throw ICLIError.operationFailed("Failed to launch companion app at \(appURL.path).")
+            let data = errorPipe.fileHandleForReading.readDataToEndOfFile()
+            let message = String(data: data, encoding: .utf8)?
+                .trimmingCharacters(in: .whitespacesAndNewlines)
+            let detail = message.map { ": \($0)" } ?? "."
+            throw ICLIError.operationFailed(
+                "Failed to launch companion app with LaunchServices\(detail)"
+            )
         }
     }
 
@@ -135,7 +172,29 @@ struct CompanionClient: Sendable {
         }
     }
 
-    private func performRequest(_ data: Data) throws -> Data {
+    private func responseTimeout(for operation: CompanionOperation) -> TimeInterval {
+        switch operation {
+        case .authRequest:
+            return 300
+        default:
+            return 30
+        }
+    }
+
+    private func performRequestWithRetry(
+        _ data: Data,
+        responseTimeout: TimeInterval
+    ) throws -> Data {
+        do {
+            return try performRequest(data, responseTimeout: responseTimeout)
+        } catch {
+            Thread.sleep(forTimeInterval: 0.15)
+            try ensureCompanionAvailable()
+            return try performRequest(data, responseTimeout: responseTimeout)
+        }
+    }
+
+    private func performRequest(_ data: Data, responseTimeout: TimeInterval) throws -> Data {
         let fileManager = FileManager.default
         let socketPath = CompanionPaths.socketPath(fileManager: fileManager)
         let fd = try openSocket(at: socketPath)
@@ -146,7 +205,7 @@ struct CompanionClient: Sendable {
             throw ICLIError.operationFailed("Failed to finalize companion request: \(String(cString: strerror(errno)))")
         }
 
-        return try UnixSocket.readAll(from: fd)
+        return try UnixSocket.readAll(from: fd, timeout: responseTimeout)
     }
 
     private func openSocket(at path: String) throws -> Int32 {
@@ -154,6 +213,7 @@ struct CompanionClient: Sendable {
         guard fd >= 0 else {
             throw ICLIError.operationFailed("Failed to create socket: \(String(cString: strerror(errno)))")
         }
+        UnixSocket.disableSigPipe(fd)
 
         do {
             var (address, length) = try UnixSocket.makeAddress(for: path)

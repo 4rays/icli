@@ -32,10 +32,35 @@ public struct AuthRequestArgs: Codable, Sendable, Equatable {
 public struct AuthStatusPayload: Codable, Sendable, Equatable {
     public let reminders: String
     public let calendars: String
+    public let companion: CompanionDiagnostics?
 
-    public init(reminders: String, calendars: String) {
+    public init(
+        reminders: String,
+        calendars: String,
+        companion: CompanionDiagnostics? = nil
+    ) {
         self.reminders = reminders
         self.calendars = calendars
+        self.companion = companion
+    }
+}
+
+public struct CompanionDiagnostics: Codable, Sendable, Equatable {
+    public let processID: Int32
+    public let bundleIdentifier: String?
+    public let bundlePath: String?
+    public let executablePath: String?
+
+    public init(
+        processID: Int32,
+        bundleIdentifier: String?,
+        bundlePath: String?,
+        executablePath: String?
+    ) {
+        self.processID = processID
+        self.bundleIdentifier = bundleIdentifier
+        self.bundlePath = bundlePath
+        self.executablePath = executablePath
     }
 }
 

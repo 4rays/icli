@@ -2,10 +2,7 @@ import Foundation
 
 @main
 struct ICli {
-    static func main() {
-        Task {
-            await CommandRouter.run()
-        }
-        RunLoop.main.run()
+    static func main() async {
+        await CommandRouter.run()
     }
 }

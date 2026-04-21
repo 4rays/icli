@@ -22,7 +22,11 @@
     <true/>
     <key>NSRemindersUsageDescription</key>
     <string>Manage reminders from the terminal.</string>
+    <key>NSRemindersFullAccessUsageDescription</key>
+    <string>Manage reminders from the terminal.</string>
     <key>NSCalendarsUsageDescription</key>
+    <string>Manage calendar events from the terminal.</string>
+    <key>NSCalendarsFullAccessUsageDescription</key>
     <string>Manage calendar events from the terminal.</string>
 </dict>
 </plist>

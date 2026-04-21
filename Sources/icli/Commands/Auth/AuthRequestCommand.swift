@@ -2,8 +2,8 @@ import Foundation
 
 enum AuthRequestCommand {
     static func run(args: ParsedArgs, format: OutputFormat) async throws {
-        let onlyReminders = args.hasFlag("--reminders")
-        let onlyCalendars = args.hasFlag("--calendars")
+        let onlyReminders = args.hasFlag("--reminders", "--reminder")
+        let onlyCalendars = args.hasFlag("--calendars", "--calendar")
         let requestBoth = !onlyReminders && !onlyCalendars
 
         let payload: AuthStatusPayload = try await CompanionClient.shared.send(
@@ -14,11 +14,7 @@ enum AuthRequestCommand {
             )
         )
 
-        Output.printAuthStatus(
-            reminders: payload.reminders,
-            calendars: payload.calendars,
-            format: format
-        )
+        Output.printAuthStatus(payload, format: format)
 
         let failures = Set(["denied", "restricted", "write-only", "not-determined", "unknown"])
         if failures.contains(payload.reminders) || failures.contains(payload.calendars) {

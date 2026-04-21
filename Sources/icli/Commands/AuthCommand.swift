@@ -28,8 +28,8 @@ enum AuthCommand {
           status    Show current authorization status
 
         OPTIONS for request:
-          --reminders   Request only Reminders access
-          --calendars   Request only Calendars access
+          --reminders, --reminder   Request only Reminders access
+          --calendars, --calendar   Request only Calendars access
           (default: request both)
         """)
     }

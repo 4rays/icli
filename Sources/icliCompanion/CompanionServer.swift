@@ -82,6 +82,7 @@ final class CompanionServer {
         while true {
             let clientFD = accept(listenFD, nil, nil)
             if clientFD >= 0 {
+                UnixSocket.disableSigPipe(clientFD)
                 handleConnection(fd: clientFD)
                 continue
             }
@@ -101,6 +102,9 @@ final class CompanionServer {
 
             do {
                 let requestData = try UnixSocket.readAll(from: fd)
+                if requestData.isEmpty {
+                    return
+                }
                 let responseData = Self.awaitResponseData(handler: handler, requestData: requestData)
                 try UnixSocket.writeAll(responseData, to: fd)
             } catch {
