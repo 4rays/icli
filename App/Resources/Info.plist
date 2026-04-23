@@ -9,8 +9,8 @@
     <key>CFBundleDisplayName</key>
     <string>iCLI</string>
     <key>CFBundleExecutable</key>
-    <string>icliCompanion</string>
-    <key>CFBundleIconFile</key>
+    <string>$(EXECUTABLE_NAME)</string>
+    <key>CFBundleIconName</key>
     <string>AppIcon</string>
     <key>CFBundlePackageType</key>
     <string>APPL</string>
@@ -22,6 +22,8 @@
     <true/>
     <key>LSMultipleInstancesProhibited</key>
     <true/>
+    <key>LSApplicationCategoryType</key>
+    <string>public.app-category.utilities</string>
     <key>NSRemindersUsageDescription</key>
     <string>Manage reminders from the terminal.</string>
     <key>NSRemindersFullAccessUsageDescription</key>

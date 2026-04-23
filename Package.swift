@@ -6,12 +6,13 @@ let package = Package(
     platforms: [.macOS(.v14)],
     targets: [
         .target(
-            name: "ICliShared",
-            path: "Sources/ICliShared"
+            name: "Shared",
+            path: "Shared/Sources"
         ),
         .executableTarget(
             name: "icli",
-            dependencies: ["ICliShared"],
+            dependencies: ["Shared"],
+            path: "CLI/Sources",
             exclude: [
                 "Core/CalendarsStore.swift",
                 "Core/DateParsing.swift",
@@ -22,13 +23,8 @@ let package = Package(
         ),
         .executableTarget(
             name: "icliCompanion",
-            dependencies: ["ICliShared"],
-            path: "Sources/icliCompanion",
-            exclude: [
-                "Resources/AppIcon.icon",
-                "Resources/AppIcon.icns",
-                "Resources/Info.plist",
-            ],
+            dependencies: ["Shared"],
+            path: "App/Sources",
             linkerSettings: [
                 .linkedFramework("AppKit"),
                 .linkedFramework("EventKit"),
@@ -36,13 +32,14 @@ let package = Package(
                     "-Xlinker", "-sectcreate",
                     "-Xlinker", "__TEXT",
                     "-Xlinker", "__info_plist",
-                    "-Xlinker", "Sources/icliCompanion/Resources/Info.plist",
+                    "-Xlinker", "App/Resources/Info.plist",
                 ]),
             ]
         ),
         .testTarget(
             name: "icliTests",
-            dependencies: ["icli", "ICliShared"]
+            dependencies: ["icli", "Shared"],
+            path: "CLI/Tests"
         ),
     ],
     swiftLanguageModes: [.v6]

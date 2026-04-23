@@ -1,6 +1,7 @@
 import Foundation
 import Testing
-@testable import ICliShared
+
+@testable import Shared
 @testable import icli
 
 @Test func companionLocatorFindsSiblingAppBundle() throws {

@@ -1,48 +1,50 @@
 BINARY := icli
-COMPANION_BINARY := icliCompanion
-COMPANION_APP_NAME := iCLI.app
-COMPANION_INFO_PLIST := Sources/icliCompanion/Resources/Info.plist
-COMPANION_ICON := Sources/icliCompanion/Resources/AppIcon.icns
+APP_NAME := iCLI.app
+APP_PROCESS := iCLI
+OLD_COMPANION_PROCESS := icliCompanion
 SOCKET_FILE := $(HOME)/Library/Application Support/icli/companion.sock
 PREFIX ?= $(HOME)/.local
 BINDIR ?= $(PREFIX)/bin
 LIBEXECDIR ?= $(PREFIX)/lib/icli
-SIGN_IDENTITY ?= Apple Development: reda@4rays.net (27HKAKXURP)
-BUILD_COMPANION_APP := .build/release/$(COMPANION_APP_NAME)
-INSTALL_COMPANION_APP := $(LIBEXECDIR)/$(COMPANION_APP_NAME)
+DERIVED_DATA := .build/xcode
+CONFIGURATION ?= Release
+NATIVE_ARCH := $(shell uname -m)
+XCODE_DESTINATION ?= platform=macOS,arch=$(NATIVE_ARCH)
+PRODUCTS_DIR := $(DERIVED_DATA)/Build/Products/$(CONFIGURATION)
+BUILT_CLI := $(PRODUCTS_DIR)/$(BINARY)
+BUILT_APP := $(PRODUCTS_DIR)/$(APP_NAME)
+INSTALL_APP := $(LIBEXECDIR)/$(APP_NAME)
 
-.PHONY: build package-companion install uninstall clean
+.PHONY: generate build install uninstall clean
 
-build:
-	@echo "Building icli..."
-	@swift build -c release
-	@$(MAKE) --no-print-directory package-companion
+generate:
+	@echo "Generating Xcode workspace..."
+	@tuist generate --no-open
 
-package-companion:
-	@echo "Packaging companion app..."
-	@rm -rf "$(BUILD_COMPANION_APP)"
-	@mkdir -p "$(BUILD_COMPANION_APP)/Contents/MacOS" "$(BUILD_COMPANION_APP)/Contents/Resources"
-	@install -m 755 ".build/release/$(COMPANION_BINARY)" "$(BUILD_COMPANION_APP)/Contents/MacOS/$(COMPANION_BINARY)"
-	@install -m 644 "$(COMPANION_INFO_PLIST)" "$(BUILD_COMPANION_APP)/Contents/Info.plist"
-	@install -m 644 "$(COMPANION_ICON)" "$(BUILD_COMPANION_APP)/Contents/Resources/AppIcon.icns"
+build: generate
+	@echo "Building iCLI app..."
+	@xcodebuild -workspace iCLI.xcworkspace -scheme iCLI -configuration "$(CONFIGURATION)" -destination "$(XCODE_DESTINATION)" -derivedDataPath "$(DERIVED_DATA)" -quiet build
+	@echo "Building icli CLI..."
+	@xcodebuild -workspace iCLI.xcworkspace -scheme icli -configuration "$(CONFIGURATION)" -destination "$(XCODE_DESTINATION)" -derivedDataPath "$(DERIVED_DATA)" -quiet build
 
 install: build
 	@echo "Installing icli to $(LIBEXECDIR)..."
-	@pkill -x "$(COMPANION_BINARY)" 2>/dev/null || true
+	@pkill -x "$(APP_PROCESS)" 2>/dev/null || true
+	@pkill -x "$(OLD_COMPANION_PROCESS)" 2>/dev/null || true
 	@rm -f "$(SOCKET_FILE)"
 	@mkdir -p "$(BINDIR)" "$(LIBEXECDIR)"
-	@install -m 755 ".build/release/$(BINARY)" "$(LIBEXECDIR)/$(BINARY)"
-	@rm -rf "$(INSTALL_COMPANION_APP)"
-	@mkdir -p "$(INSTALL_COMPANION_APP)"
-	@cp -R "$(BUILD_COMPANION_APP)/." "$(INSTALL_COMPANION_APP)/"
+	@test -x "$(BUILT_CLI)" || (echo "Missing built CLI: $(BUILT_CLI)" && exit 1)
+	@test -d "$(BUILT_APP)" || (echo "Missing built app: $(BUILT_APP)" && exit 1)
+	@install -m 755 "$(BUILT_CLI)" "$(LIBEXECDIR)/$(BINARY)"
+	@rm -rf "$(INSTALL_APP)"
+	@cp -R "$(BUILT_APP)" "$(INSTALL_APP)"
 	@ln -sf "$(LIBEXECDIR)/$(BINARY)" "$(BINDIR)/$(BINARY)"
-	@codesign --force --sign "$(SIGN_IDENTITY)" --options runtime "$(LIBEXECDIR)/$(BINARY)" >/dev/null
-	@codesign --force --deep --sign "$(SIGN_IDENTITY)" --options runtime "$(INSTALL_COMPANION_APP)" >/dev/null
-	@echo "Installed $(BINARY) and $(COMPANION_APP_NAME)."
+	@echo "Installed $(BINARY) and $(APP_NAME)."
 
 uninstall:
 	@echo "Uninstalling icli..."
-	@pkill -x "$(COMPANION_BINARY)" 2>/dev/null || true
+	@pkill -x "$(APP_PROCESS)" 2>/dev/null || true
+	@pkill -x "$(OLD_COMPANION_PROCESS)" 2>/dev/null || true
 	@rm -f "$(SOCKET_FILE)"
 	@rm -f "$(BINDIR)/$(BINARY)"
 	@rm -rf "$(LIBEXECDIR)"
