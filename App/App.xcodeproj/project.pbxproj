@@ -7,19 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		01F433C5B49D9729A3DEB6CD /* CalendarsStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A27964D3C541C6AEEBB7C40 /* CalendarsStore.swift */; };
-		1C9DA727AE4E304C8F16B2DD /* TuistBundle+ICLI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B36BD383C2C3BD2CE446F13 /* TuistBundle+ICLI.swift */; };
-		2FF7834CAAF9E0556DEBF1B8 /* CompanionMain.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF4FC69A6107F1D7E410E0A0 /* CompanionMain.swift */; };
-		311A64D7645FDC8ABAFD43CE /* CompanionServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48C2EF5C236ACDCD8B72EDB4 /* CompanionServer.swift */; };
-		3ACC2AB35E624ECF56FF8D6F /* AppIcon.icon in Resources */ = {isa = PBXBuildFile; fileRef = 1C096452CEC372CE1643ECD7 /* AppIcon.icon */; };
-		4FDB4576191025B18955DEB3 /* CompanionSettingsWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B09E87CF4C9794A815A71A0C /* CompanionSettingsWindowController.swift */; };
-		61AE08AF07D435B463D29468 /* CompanionAppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72F033CA7F1179C28BDAEC35 /* CompanionAppDelegate.swift */; };
-		67336472AF0BEED4E6D1367B /* Shared.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = AB40F3B3D8E2DCB2AC3C9605 /* Shared.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		723720FAD253A61489031E25 /* EventKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D382C80C4AF1522F2AF5F7B1 /* EventKit.framework */; };
-		736407818F1DE8AAED7E7771 /* CompanionAuthorization.swift in Sources */ = {isa = PBXBuildFile; fileRef = A93FDABE04014D9C4EC244B9 /* CompanionAuthorization.swift */; };
-		93F06626782873AC2184E6CD /* CompanionRequestHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = D51DA7E984C679A71BB6C6AF /* CompanionRequestHandler.swift */; };
-		A8531466A301024659E1288C /* CompanionImports.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1434D1340BD207E5CB396D54 /* CompanionImports.swift */; };
-		B971711C401CB1CF883C3724 /* RemindersStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B931FFAD007014D7B526C78 /* RemindersStore.swift */; };
 		B9794A5FBD711ECB738F27AB /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 91FB685CB6A1E3D66A15E903 /* AppKit.framework */; };
 		EEF1D772F7B2B0BBF4AB66F7 /* Shared.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AB40F3B3D8E2DCB2AC3C9605 /* Shared.framework */; };
 /* End PBXBuildFile section */
@@ -31,7 +19,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				67336472AF0BEED4E6D1367B /* Shared.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -39,26 +26,36 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		1434D1340BD207E5CB396D54 /* CompanionImports.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompanionImports.swift; sourceTree = "<group>"; };
-		1C096452CEC372CE1643ECD7 /* AppIcon.icon */ = {isa = PBXFileReference; path = AppIcon.icon; sourceTree = "<group>"; };
 		27E521FDBB3B7799BBC4D84E /* Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Debug.xcconfig; sourceTree = "<group>"; };
-		2B36BD383C2C3BD2CE446F13 /* TuistBundle+ICLI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TuistBundle+ICLI.swift"; sourceTree = "<group>"; };
-		48C2EF5C236ACDCD8B72EDB4 /* CompanionServer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompanionServer.swift; sourceTree = "<group>"; };
 		61053145EB380B6B4FB14BE0 /* icli.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = icli.entitlements; path = ../icli.entitlements; sourceTree = "<group>"; };
 		723573E34CB8830FE7D40B4C /* Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Release.xcconfig; sourceTree = "<group>"; };
-		72F033CA7F1179C28BDAEC35 /* CompanionAppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompanionAppDelegate.swift; sourceTree = "<group>"; };
-		7A27964D3C541C6AEEBB7C40 /* CalendarsStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarsStore.swift; sourceTree = "<group>"; };
 		91FB685CB6A1E3D66A15E903 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/AppKit.framework; sourceTree = DEVELOPER_DIR; };
-		9B931FFAD007014D7B526C78 /* RemindersStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemindersStore.swift; sourceTree = "<group>"; };
-		A93FDABE04014D9C4EC244B9 /* CompanionAuthorization.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompanionAuthorization.swift; sourceTree = "<group>"; };
 		AB40F3B3D8E2DCB2AC3C9605 /* Shared.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Shared.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		B09E87CF4C9794A815A71A0C /* CompanionSettingsWindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompanionSettingsWindowController.swift; sourceTree = "<group>"; };
 		C7E0ECD5216191CE6A7E887F /* iCLI.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = iCLI.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D382C80C4AF1522F2AF5F7B1 /* EventKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = EventKit.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/EventKit.framework; sourceTree = DEVELOPER_DIR; };
-		D51DA7E984C679A71BB6C6AF /* CompanionRequestHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompanionRequestHandler.swift; sourceTree = "<group>"; };
-		DF4FC69A6107F1D7E410E0A0 /* CompanionMain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompanionMain.swift; sourceTree = "<group>"; };
 		F13E636A9305A42EC91FE66D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		04452C8C5C5F65A029B5656A /* AppIcon.icon */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			explicitFileTypes = {
+			};
+			explicitFolders = (
+			);
+			path = AppIcon.icon;
+			sourceTree = "<group>";
+		};
+		7280BEC8D9A877120E342466 /* Sources */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			explicitFileTypes = {
+			};
+			explicitFolders = (
+			);
+			path = Sources;
+			sourceTree = "<group>";
+		};
+/* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		53DD1987F23A1D92228D0CF6 /* Frameworks */ = {
@@ -87,10 +84,9 @@
 			isa = PBXGroup;
 			children = (
 				C257F9DAFAEA05F5543D42E5 /* Configs */,
-				B3BCDE38B26B330C9A04FADE /* Derived */,
 				62EFB15EC88C1D2636544B42 /* Resources */,
-				858C4E433DBF0294DFED1B0C /* Sources */,
 				61053145EB380B6B4FB14BE0 /* icli.entitlements */,
+				7280BEC8D9A877120E342466 /* Sources */,
 			);
 			name = Project;
 			sourceTree = "<group>";
@@ -98,42 +94,10 @@
 		62EFB15EC88C1D2636544B42 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				1C096452CEC372CE1643ECD7 /* AppIcon.icon */,
+				04452C8C5C5F65A029B5656A /* AppIcon.icon */,
 				F13E636A9305A42EC91FE66D /* Info.plist */,
 			);
 			path = Resources;
-			sourceTree = "<group>";
-		};
-		858C4E433DBF0294DFED1B0C /* Sources */ = {
-			isa = PBXGroup;
-			children = (
-				7A27964D3C541C6AEEBB7C40 /* CalendarsStore.swift */,
-				72F033CA7F1179C28BDAEC35 /* CompanionAppDelegate.swift */,
-				A93FDABE04014D9C4EC244B9 /* CompanionAuthorization.swift */,
-				1434D1340BD207E5CB396D54 /* CompanionImports.swift */,
-				DF4FC69A6107F1D7E410E0A0 /* CompanionMain.swift */,
-				D51DA7E984C679A71BB6C6AF /* CompanionRequestHandler.swift */,
-				48C2EF5C236ACDCD8B72EDB4 /* CompanionServer.swift */,
-				B09E87CF4C9794A815A71A0C /* CompanionSettingsWindowController.swift */,
-				9B931FFAD007014D7B526C78 /* RemindersStore.swift */,
-			);
-			path = Sources;
-			sourceTree = "<group>";
-		};
-		8919B428B639C6AF4BBFE002 /* Sources */ = {
-			isa = PBXGroup;
-			children = (
-				2B36BD383C2C3BD2CE446F13 /* TuistBundle+ICLI.swift */,
-			);
-			path = Sources;
-			sourceTree = "<group>";
-		};
-		B3BCDE38B26B330C9A04FADE /* Derived */ = {
-			isa = PBXGroup;
-			children = (
-				8919B428B639C6AF4BBFE002 /* Sources */,
-			);
-			path = Derived;
 			sourceTree = "<group>";
 		};
 		BDD1182E50DC622819F25364 /* Frameworks */ = {
@@ -180,6 +144,10 @@
 			);
 			dependencies = (
 			);
+			fileSystemSynchronizedGroups = (
+				7280BEC8D9A877120E342466 /* Sources */,
+				04452C8C5C5F65A029B5656A /* AppIcon.icon */,
+			);
 			name = iCLI;
 			packageProductDependencies = (
 			);
@@ -221,7 +189,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3ACC2AB35E624ECF56FF8D6F /* AppIcon.icon in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -232,16 +199,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1C9DA727AE4E304C8F16B2DD /* TuistBundle+ICLI.swift in Sources */,
-				01F433C5B49D9729A3DEB6CD /* CalendarsStore.swift in Sources */,
-				61AE08AF07D435B463D29468 /* CompanionAppDelegate.swift in Sources */,
-				736407818F1DE8AAED7E7771 /* CompanionAuthorization.swift in Sources */,
-				A8531466A301024659E1288C /* CompanionImports.swift in Sources */,
-				2FF7834CAAF9E0556DEBF1B8 /* CompanionMain.swift in Sources */,
-				93F06626782873AC2184E6CD /* CompanionRequestHandler.swift in Sources */,
-				311A64D7645FDC8ABAFD43CE /* CompanionServer.swift in Sources */,
-				4FDB4576191025B18955DEB3 /* CompanionSettingsWindowController.swift in Sources */,
-				B971711C401CB1CF883C3724 /* RemindersStore.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

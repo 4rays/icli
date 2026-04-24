@@ -12,9 +12,9 @@ let project = Project(
             bundleId: "\(teamReverseDomain).icli",
             deploymentTargets: .platforms,
             infoPlist: .file(path: "Resources/Info.plist"),
-            sources: ["Sources/**"],
-            resources: [
-                "Resources/AppIcon.icon",
+            buildableFolders: [
+                .folder("Sources"),
+                .folder("Resources/AppIcon.icon"),
             ],
             entitlements: .file(path: .relativeToRoot("icli.entitlements")),
             dependencies: [

@@ -2,7 +2,6 @@ import Foundation
 import Testing
 
 @testable import Shared
-@testable import icli
 
 @Test func companionLocatorFindsSiblingAppBundle() throws {
     let root = FileManager.default.temporaryDirectory

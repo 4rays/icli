@@ -6,13 +6,6 @@
 	objectVersion = 55;
 	objects = {
 
-/* Begin PBXBuildFile section */
-		11BFA42D914D0F2661431135 /* IPC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 759569F37EF12D11E5127193 /* IPC.swift */; };
-		43C82B9D770281CE99C19A1C /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F86CBD162BE3D6AA1E4960F /* Models.swift */; };
-		E843FD9AA076590BBBB14F22 /* DateParsing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D50DAC1FF91B94EE6FE1F72 /* DateParsing.swift */; };
-		ECCCD9B498D8C0EBD6CF2736 /* UnixSocket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84288D61392B84C0B473054E /* UnixSocket.swift */; };
-/* End PBXBuildFile section */
-
 /* Begin PBXCopyFilesBuildPhase section */
 		3AA9FA2CC2DEAF59F76A9966 /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
@@ -28,14 +21,22 @@
 
 /* Begin PBXFileReference section */
 		080C58231FCEDC083F899294 /* Shared.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Shared.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		1D50DAC1FF91B94EE6FE1F72 /* DateParsing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateParsing.swift; sourceTree = "<group>"; };
-		3F86CBD162BE3D6AA1E4960F /* Models.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models.swift; sourceTree = "<group>"; };
 		4C4B278DB43B697D46EEDF6F /* Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Debug.xcconfig; sourceTree = "<group>"; };
-		759569F37EF12D11E5127193 /* IPC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IPC.swift; sourceTree = "<group>"; };
-		84288D61392B84C0B473054E /* UnixSocket.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnixSocket.swift; sourceTree = "<group>"; };
 		D72BA6AE8B9AF02B56D8FC04 /* Shared-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "Shared-Info.plist"; sourceTree = "<group>"; };
 		DFA1DFE18BDDE2AB5B351D66 /* Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Release.xcconfig; sourceTree = "<group>"; };
 /* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		7C1B11C1FFE6D1AA8E95D761 /* Sources */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			explicitFileTypes = {
+			};
+			explicitFolders = (
+			);
+			path = Sources;
+			sourceTree = "<group>";
+		};
+/* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		CA16CCCB741E47EAA9FE52A5 /* Frameworks */ = {
@@ -71,7 +72,7 @@
 			children = (
 				56B267F2A548EFCFFBAC451E /* Configs */,
 				3C54C1673B7334EF19C38BB2 /* Derived */,
-				8DBC6BAA6C2105D09B097177 /* Sources */,
+				7C1B11C1FFE6D1AA8E95D761 /* Sources */,
 			);
 			name = Project;
 			sourceTree = "<group>";
@@ -82,17 +83,6 @@
 				080C58231FCEDC083F899294 /* Shared.framework */,
 			);
 			name = Products;
-			sourceTree = "<group>";
-		};
-		8DBC6BAA6C2105D09B097177 /* Sources */ = {
-			isa = PBXGroup;
-			children = (
-				1D50DAC1FF91B94EE6FE1F72 /* DateParsing.swift */,
-				759569F37EF12D11E5127193 /* IPC.swift */,
-				3F86CBD162BE3D6AA1E4960F /* Models.swift */,
-				84288D61392B84C0B473054E /* UnixSocket.swift */,
-			);
-			path = Sources;
 			sourceTree = "<group>";
 		};
 		CFF3308B9DD8563D12ABFC25 /* InfoPlists */ = {
@@ -126,6 +116,9 @@
 			buildRules = (
 			);
 			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				7C1B11C1FFE6D1AA8E95D761 /* Sources */,
 			);
 			name = Shared;
 			packageProductDependencies = (
@@ -178,10 +171,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E843FD9AA076590BBBB14F22 /* DateParsing.swift in Sources */,
-				11BFA42D914D0F2661431135 /* IPC.swift in Sources */,
-				43C82B9D770281CE99C19A1C /* Models.swift in Sources */,
-				ECCCD9B498D8C0EBD6CF2736 /* UnixSocket.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -206,11 +195,8 @@
 					"@executable_path/../Frameworks",
 					"@loader_path/../Frameworks",
 				);
+				MACH_O_TYPE = staticlib;
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				OTHER_LDFLAGS = (
-					"$(inherited)",
-					"-L$(DT_TOOLCHAIN_DIR)/usr/lib/swift/$(PLATFORM_NAME)",
-				);
 				PRODUCT_BUNDLE_IDENTIFIER = net.4rays.Shared;
 				PRODUCT_NAME = Shared;
 				SDKROOT = macosx;
@@ -241,11 +227,8 @@
 					"@executable_path/../Frameworks",
 					"@loader_path/../Frameworks",
 				);
+				MACH_O_TYPE = staticlib;
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				OTHER_LDFLAGS = (
-					"$(inherited)",
-					"-L$(DT_TOOLCHAIN_DIR)/usr/lib/swift/$(PLATFORM_NAME)",
-				);
 				PRODUCT_BUNDLE_IDENTIFIER = net.4rays.Shared;
 				PRODUCT_NAME = Shared;
 				SDKROOT = macosx;

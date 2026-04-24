@@ -12,10 +12,12 @@ extension Project {
                 .target(
                     name: name,
                     destinations: .destinations,
-                    product: .framework,
+                    product: .staticFramework,
                     bundleId: "\(reverseDomain).\(name)",
                     deploymentTargets: .platforms,
-                    sources: ["Sources/**"],
+                    buildableFolders: [
+                        .folder("Sources"),
+                    ],
                     settings: .settings(
                         base: [
                             "DEFINES_MODULE": "YES",
@@ -31,7 +33,9 @@ extension Project {
         name: String,
         bundleId: String,
         dependencies: [TargetDependency] = [],
-        sources: SourceFilesList = ["Sources/**"]
+        buildableFolders: [BuildableFolder] = [
+            .folder("Sources"),
+        ]
     ) -> Project {
         .init(
             name: name,
@@ -43,10 +47,11 @@ extension Project {
                     product: .commandLineTool,
                     bundleId: bundleId,
                     deploymentTargets: .platforms,
-                    sources: sources,
+                    buildableFolders: buildableFolders,
                     dependencies: dependencies,
                     settings: .settings(
                         base: [
+                            "DEFINES_MODULE": "YES",
                             "LD_RUNPATH_SEARCH_PATHS": "$(inherited) @executable_path",
                             "PRODUCT_NAME": .string(name),
                             "SWIFT_VERSION": "6.0",
@@ -59,8 +64,10 @@ extension Project {
                     product: .unitTests,
                     bundleId: "\(teamReverseDomain).\(name)Tests",
                     deploymentTargets: .platforms,
-                    sources: ["Tests/**"],
-                    dependencies: [.target(name: name)] + dependencies,
+                    buildableFolders: [
+                        .folder("Tests"),
+                    ],
+                    dependencies: dependencies,
                     settings: .settings(
                         base: [
                             "SWIFT_VERSION": "6.0",
