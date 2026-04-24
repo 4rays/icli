@@ -1,0 +1,44 @@
+{
+  "configurations": [
+    {
+      "type": "swift",
+      "request": "launch",
+      "args": [],
+      "cwd": "${workspaceFolder:icli}",
+      "name": "Debug icliCompanion",
+      "target": "icliCompanion",
+      "configuration": "debug",
+      "preLaunchTask": "swift: Build Debug icliCompanion"
+    },
+    {
+      "type": "swift",
+      "request": "launch",
+      "args": [],
+      "cwd": "${workspaceFolder:icli}",
+      "name": "Release icliCompanion",
+      "target": "icliCompanion",
+      "configuration": "release",
+      "preLaunchTask": "swift: Build Release icliCompanion"
+    },
+    {
+      "type": "swift",
+      "request": "launch",
+      "args": [],
+      "cwd": "${workspaceFolder:icli}",
+      "name": "Debug icli",
+      "target": "icli",
+      "configuration": "debug",
+      "preLaunchTask": "swift: Build Debug icli"
+    },
+    {
+      "type": "swift",
+      "request": "launch",
+      "args": [],
+      "cwd": "${workspaceFolder:icli}",
+      "name": "Release icli",
+      "target": "icli",
+      "configuration": "release",
+      "preLaunchTask": "swift: Build Release icli"
+    }
+  ]
+}
