@@ -229,12 +229,45 @@ final class CompanionSettingsWindowController: NSWindowController {
         calendarsButton.isEnabled = false
 
         Task { @MainActor in
-            _ = try? await CompanionAuthorization.request(AuthRequestArgs(
-                reminders: reminders,
-                calendars: calendars
-            ))
-            refresh()
+            do {
+                _ = try await CompanionAuthorization.request(AuthRequestArgs(
+                    reminders: reminders,
+                    calendars: calendars
+                ))
+                keepWindowVisible()
+                refresh()
+                await refreshAfterPermissionSettles()
+            } catch {
+                refresh()
+                presentRequestError(error)
+            }
         }
+    }
+
+    private func refreshAfterPermissionSettles() async {
+        try? await Task.sleep(nanoseconds: 300_000_000)
+        keepWindowVisible()
+        refresh()
+        try? await Task.sleep(nanoseconds: 1_000_000_000)
+        keepWindowVisible()
+        refresh()
+    }
+
+    private func keepWindowVisible() {
+        showWindow(nil)
+        window?.makeKeyAndOrderFront(nil)
+        window?.orderFrontRegardless()
+        NSApp.activate(ignoringOtherApps: true)
+    }
+
+    private func presentRequestError(_ error: Error) {
+        guard let window else { return }
+
+        let alert = NSAlert()
+        alert.alertStyle = .warning
+        alert.messageText = "iCLI couldn’t request access"
+        alert.informativeText = error.localizedDescription
+        alert.beginSheetModal(for: window) { _ in }
     }
 
     private func shouldOpenSystemSettings(for status: String) -> Bool {

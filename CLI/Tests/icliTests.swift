@@ -20,6 +20,17 @@ import Testing
     #expect(resolved?.path == appDir.path)
 }
 
+@Test func companionLocatorHonorsEnvironmentOverride() throws {
+    let override = "/Applications/iCLI-dev.app"
+
+    let resolved = CompanionLocator.companionAppURL(
+        executableURL: URL(fileURLWithPath: "/tmp/icli"),
+        environment: ["ICLI_COMPANION_APP": override]
+    )
+
+    #expect(resolved?.path == override)
+}
+
 @Test func jsonValueRoundTripsAuthRequestArgs() throws {
     let args = AuthRequestArgs(reminders: true, calendars: false)
     let value = try JSONValue.encode(args)

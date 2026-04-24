@@ -30,55 +30,39 @@ enum CompanionAuthorization {
     @MainActor
     private static func requestReminders() async -> String {
         let before = EKEventStore.authorizationStatus(for: .reminder)
-        guard before == .notDetermined else { return requestStatusLabel(before) }
+        guard before == .notDetermined else { return statusLabel(before) }
 
         NSApp.activate(ignoringOtherApps: true)
         let store = EKEventStore()
         do {
-            try await store.requestFullAccessToReminders()
+            let granted = try await store.requestFullAccessToReminders()
+            if granted {
+                return "authorized"
+            }
         } catch {
             return statusLabel(EKEventStore.authorizationStatus(for: .reminder))
         }
 
-        return requestResultLabel(EKEventStore.authorizationStatus(for: .reminder))
+        return statusLabel(EKEventStore.authorizationStatus(for: .reminder))
     }
 
     @MainActor
     private static func requestCalendars() async -> String {
         let before = EKEventStore.authorizationStatus(for: .event)
-        guard before == .notDetermined else { return requestStatusLabel(before) }
+        guard before == .notDetermined else { return statusLabel(before) }
 
         NSApp.activate(ignoringOtherApps: true)
         let store = EKEventStore()
         do {
-            try await store.requestFullAccessToEvents()
+            let granted = try await store.requestFullAccessToEvents()
+            if granted {
+                return "authorized"
+            }
         } catch {
             return statusLabel(EKEventStore.authorizationStatus(for: .event))
         }
 
-        return requestResultLabel(EKEventStore.authorizationStatus(for: .event))
-    }
-
-    private static func requestStatusLabel(_ status: EKAuthorizationStatus) -> String {
-        switch status {
-        case .fullAccess, .authorized: return "already-granted"
-        case .notDetermined: return "not-determined"
-        case .denied: return "denied"
-        case .restricted: return "restricted"
-        case .writeOnly: return "write-only"
-        @unknown default: return "unknown"
-        }
-    }
-
-    private static func requestResultLabel(_ status: EKAuthorizationStatus) -> String {
-        switch status {
-        case .fullAccess, .authorized: return "granted"
-        case .notDetermined: return "not-determined"
-        case .denied: return "denied"
-        case .restricted: return "restricted"
-        case .writeOnly: return "write-only"
-        @unknown default: return "unknown"
-        }
+        return statusLabel(EKEventStore.authorizationStatus(for: .event))
     }
 
     private static func statusLabel(_ status: EKAuthorizationStatus) -> String {

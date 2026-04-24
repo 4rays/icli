@@ -47,6 +47,7 @@ extension Project {
                     dependencies: dependencies,
                     settings: .settings(
                         base: [
+                            "LD_RUNPATH_SEARCH_PATHS": "$(inherited) @executable_path",
                             "PRODUCT_NAME": .string(name),
                             "SWIFT_VERSION": "6.0",
                         ]

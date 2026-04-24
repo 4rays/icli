@@ -395,6 +395,7 @@
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "-";
 				INFOPLIST_FILE = "Derived/InfoPlists/icli-Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path";
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
@@ -580,6 +581,7 @@
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "-";
 				INFOPLIST_FILE = "Derived/InfoPlists/icli-Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path";
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
