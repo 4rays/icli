@@ -196,7 +196,7 @@
 					"@loader_path/../Frameworks",
 				);
 				MACH_O_TYPE = staticlib;
-				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MACOSX_DEPLOYMENT_TARGET = 15.0;
 				PRODUCT_BUNDLE_IDENTIFIER = net.4rays.Shared;
 				PRODUCT_NAME = Shared;
 				SDKROOT = macosx;
@@ -228,7 +228,7 @@
 					"@loader_path/../Frameworks",
 				);
 				MACH_O_TYPE = staticlib;
-				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MACOSX_DEPLOYMENT_TARGET = 15.0;
 				PRODUCT_BUNDLE_IDENTIFIER = net.4rays.Shared;
 				PRODUCT_NAME = Shared;
 				SDKROOT = macosx;

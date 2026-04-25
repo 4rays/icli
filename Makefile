@@ -2,8 +2,7 @@ BINARY := icli
 APP_NAME := iCLI.app
 APP_BUNDLE_ID := net.4rays.icli
 APP_PROCESS := iCLI
-OLD_COMPANION_PROCESS := icliCompanion
-SOCKET_FILE := $(HOME)/Library/Application Support/icli/companion.sock
+SOCKET_FILE := $(HOME)/Library/Application Support/icli/icli.sock
 PREFIX ?= $(HOME)/.local
 BINDIR ?= $(PREFIX)/bin
 LIBEXECDIR ?= $(PREFIX)/lib/icli
@@ -31,7 +30,6 @@ build: generate
 install: build
 	@echo "Installing icli to $(LIBEXECDIR)..."
 	@pkill -x "$(APP_PROCESS)" 2>/dev/null || true
-	@pkill -x "$(OLD_COMPANION_PROCESS)" 2>/dev/null || true
 	@rm -f "$(SOCKET_FILE)"
 	@mkdir -p "$(BINDIR)" "$(LIBEXECDIR)"
 	@test -x "$(BUILT_CLI)" || (echo "Missing built CLI: $(BUILT_CLI)" && exit 1)
@@ -45,7 +43,6 @@ install: build
 reset:
 	@echo "Resetting iCLI local runtime state and permissions..."
 	@pkill -x "$(APP_PROCESS)" 2>/dev/null || true
-	@pkill -x "$(OLD_COMPANION_PROCESS)" 2>/dev/null || true
 	@rm -f "$(SOCKET_FILE)"
 	@tccutil reset Reminders "$(APP_BUNDLE_ID)"
 	@tccutil reset Calendar "$(APP_BUNDLE_ID)"
@@ -54,7 +51,6 @@ reset:
 uninstall:
 	@echo "Uninstalling icli..."
 	@pkill -x "$(APP_PROCESS)" 2>/dev/null || true
-	@pkill -x "$(OLD_COMPANION_PROCESS)" 2>/dev/null || true
 	@rm -f "$(SOCKET_FILE)"
 	@rm -f "$(BINDIR)/$(BINARY)"
 	@rm -rf "$(LIBEXECDIR)"

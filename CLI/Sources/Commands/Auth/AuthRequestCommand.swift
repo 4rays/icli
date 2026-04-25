@@ -6,7 +6,7 @@ enum AuthRequestCommand {
         let onlyCalendars = args.hasFlag("--calendars", "--calendar")
         let requestBoth = !onlyReminders && !onlyCalendars
 
-        let payload: AuthStatusPayload = try await CompanionClient.shared.send(
+        let payload: AuthStatusPayload = try await AppClient.shared.send(
             .authRequest,
             args: AuthRequestArgs(
                 reminders: requestBoth || onlyReminders,

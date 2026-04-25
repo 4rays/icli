@@ -34,7 +34,7 @@ enum ReminderEditCommand {
             update.priority = p
         }
 
-        let item: ReminderItem = try await CompanionClient.shared.send(
+        let item: ReminderItem = try await AppClient.shared.send(
             .reminderEdit,
             args: ReminderEditArgs(id: id, update: update)
         )

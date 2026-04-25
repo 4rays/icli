@@ -7,7 +7,7 @@ enum ReminderCompleteCommand {
             throw ICLIError.missingArgument("id")
         }
 
-        let result: CountPayload = try await CompanionClient.shared.send(
+        let result: CountPayload = try await AppClient.shared.send(
             .reminderComplete,
             args: ReminderIDsArgs(ids: ids)
         )

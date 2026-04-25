@@ -7,7 +7,7 @@
 
   ```text
   iCLI.app
-    Contents/MacOS/icliCompanion
+    Contents/MacOS/iCLI
     Contents/Resources/bin/icli
   ```
 
@@ -30,5 +30,5 @@
   ```
 
 - Keep the local `make install` path as a developer convenience only.
-- Ensure the CLI can discover the companion app both from the local dev install layout and from the Homebrew Cask app layout.
+- Ensure the CLI can discover the app both from the local dev install layout and from the Homebrew Cask app layout.
 - Keep the app bundle identifier stable as `net.4rays.icli` so TCC permissions attach to the signed app identity.

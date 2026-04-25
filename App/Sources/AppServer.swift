@@ -5,20 +5,20 @@ private final class ResponseBox: @unchecked Sendable {
     var value = Data()
 }
 
-final class CompanionServer {
+final class AppServer {
     private let socketPath: String
-    private let handler: CompanionRequestHandler
+    private let handler: AppRequestHandler
     private var listenFD: Int32 = -1
     private var acceptSource: DispatchSourceRead?
 
     init(
-        handler: CompanionRequestHandler,
-        socketPath: String = CompanionPaths.socketPath()
+        handler: AppRequestHandler,
+        socketPath: String = AppPaths.socketPath()
     ) throws {
         self.handler = handler
         self.socketPath = socketPath
         try FileManager.default.createDirectory(
-            at: CompanionPaths.supportDirectory(),
+            at: AppPaths.supportDirectory(),
             withIntermediateDirectories: true
         )
     }
@@ -28,7 +28,7 @@ final class CompanionServer {
 
         let fd = socket(AF_UNIX, SOCK_STREAM, 0)
         guard fd >= 0 else {
-            throw ICLIError.operationFailed("Failed to create companion socket: \(String(cString: strerror(errno)))")
+            throw ICLIError.operationFailed("Failed to create app socket: \(String(cString: strerror(errno)))")
         }
 
         do {
@@ -39,11 +39,11 @@ final class CompanionServer {
                 }
             }
             guard bindResult == 0 else {
-                throw ICLIError.operationFailed("Failed to bind companion socket: \(String(cString: strerror(errno)))")
+                throw ICLIError.operationFailed("Failed to bind app socket: \(String(cString: strerror(errno)))")
             }
 
             guard listen(fd, 16) == 0 else {
-                throw ICLIError.operationFailed("Failed to listen on companion socket: \(String(cString: strerror(errno)))")
+                throw ICLIError.operationFailed("Failed to listen on app socket: \(String(cString: strerror(errno)))")
             }
 
             try UnixSocket.setNonBlocking(fd)
@@ -108,16 +108,16 @@ final class CompanionServer {
                 let responseData = Self.awaitResponseData(handler: handler, requestData: requestData)
                 try UnixSocket.writeAll(responseData, to: fd)
             } catch {
-                let response = CompanionResponseEnvelope(
+                let response = AppResponseEnvelope(
                     id: UUID().uuidString,
                     ok: false,
                     result: nil,
-                    error: CompanionErrorPayload(
-                        code: CompanionErrorCode.internalFailure.rawValue,
+                    error: AppErrorPayload(
+                        code: AppErrorCode.internalFailure.rawValue,
                         message: error.localizedDescription
                     )
                 )
-                if let data = try? CompanionCodec.makeEncoder().encode(response) {
+                if let data = try? AppCodec.makeEncoder().encode(response) {
                     try? UnixSocket.writeAll(data, to: fd)
                 }
             }
@@ -125,7 +125,7 @@ final class CompanionServer {
     }
 
     private static func awaitResponseData(
-        handler: CompanionRequestHandler,
+        handler: AppRequestHandler,
         requestData: Data
     ) -> Data {
         let semaphore = DispatchSemaphore(value: 0)
@@ -142,24 +142,24 @@ final class CompanionServer {
     }
 
     private static func makeResponseData(
-        handler: CompanionRequestHandler,
+        handler: AppRequestHandler,
         requestData: Data
     ) async -> Data {
         do {
-            let request = try CompanionCodec.makeDecoder().decode(CompanionRequestEnvelope.self, from: requestData)
+            let request = try AppCodec.makeDecoder().decode(AppRequestEnvelope.self, from: requestData)
             let response = await handler.handle(request)
-            return try CompanionCodec.makeEncoder().encode(response)
+            return try AppCodec.makeEncoder().encode(response)
         } catch {
-            let response = CompanionResponseEnvelope(
+            let response = AppResponseEnvelope(
                 id: UUID().uuidString,
                 ok: false,
                 result: nil,
-                error: CompanionErrorPayload(
-                    code: CompanionErrorCode.validationFailed.rawValue,
+                error: AppErrorPayload(
+                    code: AppErrorCode.validationFailed.rawValue,
                     message: error.localizedDescription
                 )
             )
-            return (try? CompanionCodec.makeEncoder().encode(response)) ?? Data()
+            return (try? AppCodec.makeEncoder().encode(response)) ?? Data()
         }
     }
 }

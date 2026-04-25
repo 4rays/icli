@@ -2,7 +2,7 @@ import Foundation
 
 enum AuthSettingsCommand {
     static func run(format: OutputFormat) async throws {
-        let _: EmptyArgs = try await CompanionClient.shared.send(.appShowSettings)
+        let _: EmptyArgs = try await AppClient.shared.send(.appShowSettings)
 
         switch format {
         case .human:

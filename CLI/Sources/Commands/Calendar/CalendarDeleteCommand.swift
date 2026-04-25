@@ -6,7 +6,7 @@ enum CalendarDeleteCommand {
             throw ICLIError.missingArgument("id")
         }
 
-        _ = try await CompanionClient.shared.send(
+        _ = try await AppClient.shared.send(
             .calendarDelete,
             args: CalendarDeleteArgs(id: id),
             as: CountPayload.self

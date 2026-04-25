@@ -6,7 +6,7 @@ public let cliTarget: TargetReference = "icli"
 
 public extension ProjectDescription.DeploymentTargets {
     static var platforms: DeploymentTargets {
-        .macOS("14.0")
+        .macOS("15.0")
     }
 }
 

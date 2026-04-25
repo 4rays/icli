@@ -7,8 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1C9DA727AE4E304C8F16B2DD /* TuistBundle+ICLI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B36BD383C2C3BD2CE446F13 /* TuistBundle+ICLI.swift */; };
 		723720FAD253A61489031E25 /* EventKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D382C80C4AF1522F2AF5F7B1 /* EventKit.framework */; };
 		B9794A5FBD711ECB738F27AB /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 91FB685CB6A1E3D66A15E903 /* AppKit.framework */; };
+		E1F0DE00E9A47E20EA65B03D /* TuistAssets+ICLI.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4DA9646C507ECE420156684 /* TuistAssets+ICLI.swift */; };
 		EEF1D772F7B2B0BBF4AB66F7 /* Shared.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AB40F3B3D8E2DCB2AC3C9605 /* Shared.framework */; };
 /* End PBXBuildFile section */
 
@@ -26,26 +28,19 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		11EFDFD74F63B1D0D036B695 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		27E521FDBB3B7799BBC4D84E /* Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Debug.xcconfig; sourceTree = "<group>"; };
+		2B36BD383C2C3BD2CE446F13 /* TuistBundle+ICLI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TuistBundle+ICLI.swift"; sourceTree = "<group>"; };
 		61053145EB380B6B4FB14BE0 /* icli.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = icli.entitlements; path = ../icli.entitlements; sourceTree = "<group>"; };
 		723573E34CB8830FE7D40B4C /* Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Release.xcconfig; sourceTree = "<group>"; };
 		91FB685CB6A1E3D66A15E903 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/AppKit.framework; sourceTree = DEVELOPER_DIR; };
 		AB40F3B3D8E2DCB2AC3C9605 /* Shared.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Shared.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C7E0ECD5216191CE6A7E887F /* iCLI.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = iCLI.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D382C80C4AF1522F2AF5F7B1 /* EventKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = EventKit.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/EventKit.framework; sourceTree = DEVELOPER_DIR; };
-		F13E636A9305A42EC91FE66D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		D4DA9646C507ECE420156684 /* TuistAssets+ICLI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TuistAssets+ICLI.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		04452C8C5C5F65A029B5656A /* AppIcon.icon */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			explicitFileTypes = {
-			};
-			explicitFolders = (
-			);
-			path = AppIcon.icon;
-			sourceTree = "<group>";
-		};
 		7280BEC8D9A877120E342466 /* Sources */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			explicitFileTypes = {
@@ -53,6 +48,15 @@
 			explicitFolders = (
 			);
 			path = Sources;
+			sourceTree = "<group>";
+		};
+		C9E6B165F802744F94F184D4 /* Resources */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			explicitFileTypes = {
+			};
+			explicitFolders = (
+			);
+			path = Resources;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -84,20 +88,30 @@
 			isa = PBXGroup;
 			children = (
 				C257F9DAFAEA05F5543D42E5 /* Configs */,
-				62EFB15EC88C1D2636544B42 /* Resources */,
+				B3BCDE38B26B330C9A04FADE /* Derived */,
 				61053145EB380B6B4FB14BE0 /* icli.entitlements */,
+				11EFDFD74F63B1D0D036B695 /* Info.plist */,
+				C9E6B165F802744F94F184D4 /* Resources */,
 				7280BEC8D9A877120E342466 /* Sources */,
 			);
 			name = Project;
 			sourceTree = "<group>";
 		};
-		62EFB15EC88C1D2636544B42 /* Resources */ = {
+		8919B428B639C6AF4BBFE002 /* Sources */ = {
 			isa = PBXGroup;
 			children = (
-				04452C8C5C5F65A029B5656A /* AppIcon.icon */,
-				F13E636A9305A42EC91FE66D /* Info.plist */,
+				D4DA9646C507ECE420156684 /* TuistAssets+ICLI.swift */,
+				2B36BD383C2C3BD2CE446F13 /* TuistBundle+ICLI.swift */,
 			);
-			path = Resources;
+			path = Sources;
+			sourceTree = "<group>";
+		};
+		B3BCDE38B26B330C9A04FADE /* Derived */ = {
+			isa = PBXGroup;
+			children = (
+				8919B428B639C6AF4BBFE002 /* Sources */,
+			);
+			path = Derived;
 			sourceTree = "<group>";
 		};
 		BDD1182E50DC622819F25364 /* Frameworks */ = {
@@ -146,7 +160,7 @@
 			);
 			fileSystemSynchronizedGroups = (
 				7280BEC8D9A877120E342466 /* Sources */,
-				04452C8C5C5F65A029B5656A /* AppIcon.icon */,
+				C9E6B165F802744F94F184D4 /* Resources */,
 			);
 			name = iCLI;
 			packageProductDependencies = (
@@ -199,6 +213,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E1F0DE00E9A47E20EA65B03D /* TuistAssets+ICLI.swift in Sources */,
+				1C9DA727AE4E304C8F16B2DD /* TuistBundle+ICLI.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -215,12 +231,12 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				ENABLE_PREVIEWS = YES;
-				INFOPLIST_FILE = Resources/Info.plist;
+				INFOPLIST_FILE = Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MACOSX_DEPLOYMENT_TARGET = 15.0;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-L$(DT_TOOLCHAIN_DIR)/usr/lib/swift/$(PLATFORM_NAME)",
@@ -248,12 +264,12 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				ENABLE_PREVIEWS = YES;
-				INFOPLIST_FILE = Resources/Info.plist;
+				INFOPLIST_FILE = Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MACOSX_DEPLOYMENT_TARGET = 15.0;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-L$(DT_TOOLCHAIN_DIR)/usr/lib/swift/$(PLATFORM_NAME)",

@@ -1,64 +1,65 @@
 import Foundation
+import Shared
 
-struct CompanionClient: Sendable {
-    static let shared = CompanionClient()
+struct AppClient: Sendable {
+    static let shared = AppClient()
 
     private init() {}
 
     func send<Response: Decodable, Args: Encodable>(
-        _ operation: CompanionOperation,
+        _ operation: AppOperation,
         args: Args,
         as responseType: Response.Type = Response.self
     ) async throws -> Response {
-        try ensureCompanionAvailable()
+        try ensureAppAvailable()
 
-        let request = CompanionRequestEnvelope(
+        let request = AppRequestEnvelope(
             id: UUID().uuidString,
             op: operation.rawValue,
             args: try JSONValue.encode(args)
         )
-        let requestData = try CompanionCodec.makeEncoder().encode(request)
+        let requestData = try AppCodec.makeEncoder().encode(request)
         let responseData = try performRequestWithRetry(
             requestData,
             responseTimeout: responseTimeout(for: operation)
         )
-        let response: CompanionResponseEnvelope
+        let response: AppResponseEnvelope
         do {
-            response = try CompanionCodec.makeDecoder().decode(CompanionResponseEnvelope.self, from: responseData)
+            response = try AppCodec.makeDecoder().decode(AppResponseEnvelope.self, from: responseData)
         } catch {
             let preview = String(data: responseData.prefix(500), encoding: .utf8) ?? "<non-UTF8 response>"
             throw ICLIError.operationFailed(
-                "Companion returned an invalid response (\(responseData.count) bytes): \(preview)"
+                "App returned an invalid response (\(responseData.count) bytes): \(preview)"
             )
         }
 
         guard response.ok else {
-            let payload = response.error ?? CompanionErrorPayload(
-                code: CompanionErrorCode.internalFailure.rawValue,
-                message: "Companion request failed without an error payload."
+            let payload = response.error ?? AppErrorPayload(
+                code: AppErrorCode.internalFailure.rawValue,
+                message: "App request failed without an error payload."
             )
             throw ICLIError.operationFailed(payload.message)
         }
 
         guard let result = response.result else {
-            throw ICLIError.operationFailed("Companion returned an empty response for \(operation.rawValue).")
+            throw ICLIError.operationFailed("App returned an empty response for \(operation.rawValue).")
         }
 
         return try result.decode(Response.self)
     }
 
     func send<Response: Decodable>(
-        _ operation: CompanionOperation,
+        _ operation: AppOperation,
         as responseType: Response.Type = Response.self
     ) async throws -> Response {
         try await send(operation, args: EmptyArgs(), as: responseType)
     }
 
-    private func ensureCompanionAvailable() throws {
+    private func ensureAppAvailable() throws {
         let fileManager = FileManager.default
-        let socketPath = CompanionPaths.socketPath(fileManager: fileManager)
+        let socketPath = AppPaths.socketPath(fileManager: fileManager)
         try fileManager.createDirectory(
-            at: CompanionPaths.supportDirectory(fileManager: fileManager),
+            at: AppPaths.supportDirectory(fileManager: fileManager),
             withIntermediateDirectories: true
         )
 
@@ -66,13 +67,13 @@ struct CompanionClient: Sendable {
             return
         }
 
-        guard let appURL = CompanionLocator.companionAppURL(fileManager: fileManager) else {
+        guard let appURL = AppLocator.appURL(fileManager: fileManager) else {
             throw ICLIError.operationFailed(
-                "iCLI app not found. Reinstall icli or set ICLI_COMPANION_APP to the app bundle path."
+                "iCLI app not found. Reinstall icli or set ICLI_APP to the app bundle path."
             )
         }
 
-        try launchCompanion(at: appURL)
+        try launchApp(at: appURL)
 
         let timeout = Date().addingTimeInterval(5)
         while Date() < timeout {
@@ -83,11 +84,11 @@ struct CompanionClient: Sendable {
         }
 
         throw ICLIError.operationFailed(
-            "Companion app did not become available in time."
+            "iCLI app did not become available in time."
         )
     }
 
-    private func launchCompanion(at appURL: URL) throws {
+    private func launchApp(at appURL: URL) throws {
         let process = Process()
         process.executableURL = URL(fileURLWithPath: "/usr/bin/open")
         process.arguments = ["-g", appURL.path, "--args", "--icli-agent"]
@@ -119,7 +120,7 @@ struct CompanionClient: Sendable {
         }
     }
 
-    private func responseTimeout(for operation: CompanionOperation) -> TimeInterval {
+    private func responseTimeout(for operation: AppOperation) -> TimeInterval {
         switch operation {
         case .authRequest:
             return 300
@@ -136,20 +137,20 @@ struct CompanionClient: Sendable {
             return try performRequest(data, responseTimeout: responseTimeout)
         } catch {
             Thread.sleep(forTimeInterval: 0.15)
-            try ensureCompanionAvailable()
+            try ensureAppAvailable()
             return try performRequest(data, responseTimeout: responseTimeout)
         }
     }
 
     private func performRequest(_ data: Data, responseTimeout: TimeInterval) throws -> Data {
         let fileManager = FileManager.default
-        let socketPath = CompanionPaths.socketPath(fileManager: fileManager)
+        let socketPath = AppPaths.socketPath(fileManager: fileManager)
         let fd = try openSocket(at: socketPath)
         defer { close(fd) }
 
         try UnixSocket.writeAll(data, to: fd)
         if shutdown(fd, SHUT_WR) < 0 {
-            throw ICLIError.operationFailed("Failed to finalize companion request: \(String(cString: strerror(errno)))")
+            throw ICLIError.operationFailed("Failed to finalize app request: \(String(cString: strerror(errno)))")
         }
 
         return try UnixSocket.readAll(from: fd, timeout: responseTimeout)
@@ -173,7 +174,7 @@ struct CompanionClient: Sendable {
             if result < 0 {
                 let error = errno
                 close(fd)
-                throw ICLIError.operationFailed("Failed to connect to companion socket: \(String(cString: strerror(error)))")
+                throw ICLIError.operationFailed("Failed to connect to app socket: \(String(cString: strerror(error)))")
             }
 
             return fd

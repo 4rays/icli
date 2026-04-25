@@ -1,27 +1,27 @@
 import Foundation
 
-final class CompanionRequestHandler: @unchecked Sendable {
+final class AppRequestHandler: @unchecked Sendable {
     private let remindersStore = RemindersStore()
     private let calendarsStore = CalendarsStore()
 
-    func handle(_ request: CompanionRequestEnvelope) async -> CompanionResponseEnvelope {
+    func handle(_ request: AppRequestEnvelope) async -> AppResponseEnvelope {
         do {
-            guard let operation = CompanionOperation(rawValue: request.op) else {
-                throw ICLIError.invalidArgument("Unknown companion operation: \(request.op)")
+            guard let operation = AppOperation(rawValue: request.op) else {
+                throw ICLIError.invalidArgument("Unknown app operation: \(request.op)")
             }
 
             switch operation {
             case .appShowSettings:
                 await MainActor.run {
-                    CompanionSettingsWindowController.shared.show()
+                    AppWindowRouter.shared.showSettings()
                 }
                 return try success(request, EmptyArgs())
             case .authStatus:
-                let result = await CompanionAuthorization.status()
+                let result = await AppAuthorization.status()
                 return try success(request, result)
             case .authRequest:
                 let args = try decodeArgs(request, as: AuthRequestArgs.self)
-                let result = try await CompanionAuthorization.request(args)
+                let result = try await AppAuthorization.request(args)
                 return try success(request, result)
             case .reminderList:
                 let args = try decodeArgs(request, as: ReminderListArgs.self)
@@ -81,7 +81,7 @@ final class CompanionRequestHandler: @unchecked Sendable {
         }
     }
 
-    private func decodeArgs<T: Decodable>(_ request: CompanionRequestEnvelope, as type: T.Type) throws -> T {
+    private func decodeArgs<T: Decodable>(_ request: AppRequestEnvelope, as type: T.Type) throws -> T {
         if T.self == EmptyArgs.self, request.args == nil {
             return EmptyArgs() as! T
         }
@@ -93,10 +93,10 @@ final class CompanionRequestHandler: @unchecked Sendable {
     }
 
     private func success<T: Encodable>(
-        _ request: CompanionRequestEnvelope,
+        _ request: AppRequestEnvelope,
         _ result: T
-    ) throws -> CompanionResponseEnvelope {
-        CompanionResponseEnvelope(
+    ) throws -> AppResponseEnvelope {
+        AppResponseEnvelope(
             id: request.id,
             ok: true,
             result: try JSONValue.encode(result),
@@ -104,40 +104,40 @@ final class CompanionRequestHandler: @unchecked Sendable {
         )
     }
 
-    private func failure(_ request: CompanionRequestEnvelope, error: Error) -> CompanionResponseEnvelope {
-        let payload: CompanionErrorPayload
+    private func failure(_ request: AppRequestEnvelope, error: Error) -> AppResponseEnvelope {
+        let payload: AppErrorPayload
 
         if let icliError = error as? ICLIError {
             switch icliError {
             case .accessDenied:
-                payload = CompanionErrorPayload(
-                    code: CompanionErrorCode.permissionDenied.rawValue,
+                payload = AppErrorPayload(
+                    code: AppErrorCode.permissionDenied.rawValue,
                     message: icliError.localizedDescription
                 )
             case .listNotFound, .reminderNotFound, .calendarNotFound, .eventNotFound:
-                payload = CompanionErrorPayload(
-                    code: CompanionErrorCode.notFound.rawValue,
+                payload = AppErrorPayload(
+                    code: AppErrorCode.notFound.rawValue,
                     message: icliError.localizedDescription
                 )
             case .missingArgument, .invalidArgument:
-                payload = CompanionErrorPayload(
-                    code: CompanionErrorCode.validationFailed.rawValue,
+                payload = AppErrorPayload(
+                    code: AppErrorCode.validationFailed.rawValue,
                     message: icliError.localizedDescription
                 )
             case .operationFailed:
-                payload = CompanionErrorPayload(
-                    code: CompanionErrorCode.internalFailure.rawValue,
+                payload = AppErrorPayload(
+                    code: AppErrorCode.internalFailure.rawValue,
                     message: icliError.localizedDescription
                 )
             }
         } else {
-            payload = CompanionErrorPayload(
-                code: CompanionErrorCode.internalFailure.rawValue,
+            payload = AppErrorPayload(
+                code: AppErrorCode.internalFailure.rawValue,
                 message: error.localizedDescription
             )
         }
 
-        return CompanionResponseEnvelope(
+        return AppResponseEnvelope(
             id: request.id,
             ok: false,
             result: nil,

@@ -29,7 +29,7 @@ enum CalendarEventsCommand {
             end = cal.date(byAdding: .day, value: 7, to: start)!
         }
 
-        let events: [CalendarEvent] = try await CompanionClient.shared.send(
+        let events: [CalendarEvent] = try await AppClient.shared.send(
             .calendarEvents,
             args: CalendarEventsArgs(start: start, end: end, calendarName: calName)
         )

@@ -35,7 +35,7 @@ enum ReminderAddCommand {
         }
 
         let draft = ReminderDraft(title: title, notes: notes, dueDate: dueDate, priority: priority)
-        let item: ReminderItem = try await CompanionClient.shared.send(
+        let item: ReminderItem = try await AppClient.shared.send(
             .reminderAdd,
             args: ReminderAddArgs(draft: draft, listName: listFlag)
         )

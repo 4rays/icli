@@ -1,6 +1,6 @@
 import Foundation
 
-public enum CompanionOperation: String, Codable, Sendable {
+public enum AppOperation: String, Codable, Sendable {
     case appShowSettings = "app.showSettings"
     case authStatus = "auth.status"
     case authRequest = "auth.request"
@@ -30,23 +30,35 @@ public struct AuthRequestArgs: Codable, Sendable, Equatable {
     }
 }
 
+public enum AuthorizationStatus: String, Codable, Sendable, Equatable, CustomStringConvertible {
+    case authorized
+    case notDetermined = "not-determined"
+    case denied
+    case restricted
+    case writeOnly = "write-only"
+    case skipped
+    case unknown
+
+    public var description: String { rawValue }
+}
+
 public struct AuthStatusPayload: Codable, Sendable, Equatable {
-    public let reminders: String
-    public let calendars: String
-    public let companion: CompanionDiagnostics?
+    public let reminders: AuthorizationStatus
+    public let calendars: AuthorizationStatus
+    public let app: AppDiagnostics?
 
     public init(
-        reminders: String,
-        calendars: String,
-        companion: CompanionDiagnostics? = nil
+        reminders: AuthorizationStatus,
+        calendars: AuthorizationStatus,
+        app: AppDiagnostics? = nil
     ) {
         self.reminders = reminders
         self.calendars = calendars
-        self.companion = companion
+        self.app = app
     }
 }
 
-public struct CompanionDiagnostics: Codable, Sendable, Equatable {
+public struct AppDiagnostics: Codable, Sendable, Equatable {
     public let processID: Int32
     public let bundleIdentifier: String?
     public let bundlePath: String?
@@ -139,7 +151,7 @@ public struct CalendarDeleteArgs: Codable, Sendable, Equatable {
     }
 }
 
-public struct CompanionRequestEnvelope: Codable, Sendable {
+public struct AppRequestEnvelope: Codable, Sendable {
     public let id: String
     public let op: String
     public let args: JSONValue?
@@ -151,7 +163,7 @@ public struct CompanionRequestEnvelope: Codable, Sendable {
     }
 }
 
-public struct CompanionErrorPayload: Codable, Sendable {
+public struct AppErrorPayload: Codable, Sendable {
     public let code: String
     public let message: String
     public let details: JSONValue?
@@ -163,13 +175,13 @@ public struct CompanionErrorPayload: Codable, Sendable {
     }
 }
 
-public struct CompanionResponseEnvelope: Codable, Sendable {
+public struct AppResponseEnvelope: Codable, Sendable {
     public let id: String
     public let ok: Bool
     public let result: JSONValue?
-    public let error: CompanionErrorPayload?
+    public let error: AppErrorPayload?
 
-    public init(id: String, ok: Bool, result: JSONValue?, error: CompanionErrorPayload?) {
+    public init(id: String, ok: Bool, result: JSONValue?, error: AppErrorPayload?) {
         self.id = id
         self.ok = ok
         self.result = result
@@ -177,7 +189,7 @@ public struct CompanionResponseEnvelope: Codable, Sendable {
     }
 }
 
-public enum CompanionErrorCode: String, Sendable {
+public enum AppErrorCode: String, Sendable {
     case unavailable = "unavailable"
     case permissionDenied = "permission_denied"
     case validationFailed = "validation_failed"
@@ -186,9 +198,9 @@ public enum CompanionErrorCode: String, Sendable {
     case bootstrapFailure = "bootstrap_failure"
 }
 
-public enum CompanionPaths {
+public enum AppPaths {
     public static let appBundleName = "iCLI.app"
-    public static let socketFilename = "companion.sock"
+    public static let socketFilename = "icli.sock"
 
     public static func supportDirectory(fileManager: FileManager = .default) -> URL {
         fileManager.homeDirectoryForCurrentUser
@@ -204,7 +216,7 @@ public enum CompanionPaths {
     }
 }
 
-public enum CompanionCodec {
+public enum AppCodec {
     public static func makeEncoder(pretty: Bool = false) -> JSONEncoder {
         let encoder = JSONEncoder()
         encoder.dateEncodingStrategy = .iso8601
@@ -292,13 +304,13 @@ public enum JSONValue: Codable, Sendable, Equatable {
     }
 
     public static func encode<T: Encodable>(_ value: T) throws -> JSONValue {
-        let data = try CompanionCodec.makeEncoder().encode(value)
-        return try CompanionCodec.makeDecoder().decode(JSONValue.self, from: data)
+        let data = try AppCodec.makeEncoder().encode(value)
+        return try AppCodec.makeDecoder().decode(JSONValue.self, from: data)
     }
 
     public func decode<T: Decodable>(_ type: T.Type) throws -> T {
-        let data = try CompanionCodec.makeEncoder().encode(self)
-        return try CompanionCodec.makeDecoder().decode(T.self, from: data)
+        let data = try AppCodec.makeEncoder().encode(self)
+        return try AppCodec.makeDecoder().decode(T.self, from: data)
     }
 }
 

@@ -1,18 +1,18 @@
 import Darwin
 import Foundation
 
-public enum CompanionLocator {
-    public static func companionAppURL(
+public enum AppLocator {
+    public static func appURL(
         executableURL: URL = currentExecutableURL(),
         environment: [String: String] = ProcessInfo.processInfo.environment,
         fileManager: FileManager = .default
     ) -> URL? {
-        if let override = environment["ICLI_COMPANION_APP"], !override.isEmpty {
+        if let override = environment["ICLI_APP"], !override.isEmpty {
             return URL(fileURLWithPath: override)
         }
 
         let sibling = executableURL.deletingLastPathComponent()
-            .appendingPathComponent(CompanionPaths.appBundleName, isDirectory: true)
+            .appendingPathComponent(AppPaths.appBundleName, isDirectory: true)
         if fileManager.fileExists(atPath: sibling.path) {
             return sibling
         }

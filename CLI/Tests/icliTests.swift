@@ -3,15 +3,15 @@ import Testing
 
 @testable import Shared
 
-@Test func companionLocatorFindsSiblingAppBundle() throws {
+@Test func appLocatorFindsSiblingAppBundle() throws {
     let root = FileManager.default.temporaryDirectory
         .appendingPathComponent(UUID().uuidString, isDirectory: true)
     let binDir = root.appendingPathComponent("bin", isDirectory: true)
-    let appDir = binDir.appendingPathComponent(CompanionPaths.appBundleName, isDirectory: true)
+    let appDir = binDir.appendingPathComponent(AppPaths.appBundleName, isDirectory: true)
 
     try FileManager.default.createDirectory(at: appDir, withIntermediateDirectories: true)
 
-    let resolved = CompanionLocator.companionAppURL(
+    let resolved = AppLocator.appURL(
         executableURL: binDir.appendingPathComponent("icli"),
         environment: [:]
     )
@@ -19,12 +19,12 @@ import Testing
     #expect(resolved?.path == appDir.path)
 }
 
-@Test func companionLocatorHonorsEnvironmentOverride() throws {
+@Test func appLocatorHonorsEnvironmentOverride() throws {
     let override = "/Applications/iCLI-dev.app"
 
-    let resolved = CompanionLocator.companionAppURL(
+    let resolved = AppLocator.appURL(
         executableURL: URL(fileURLWithPath: "/tmp/icli"),
-        environment: ["ICLI_COMPANION_APP": override]
+        environment: ["ICLI_APP": override]
     )
 
     #expect(resolved?.path == override)

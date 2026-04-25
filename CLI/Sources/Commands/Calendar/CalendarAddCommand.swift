@@ -41,7 +41,7 @@ enum CalendarAddCommand {
             url: url
         )
 
-        let event: CalendarEvent = try await CompanionClient.shared.send(
+        let event: CalendarEvent = try await AppClient.shared.send(
             .calendarAdd,
             args: CalendarAddArgs(draft: draft)
         )

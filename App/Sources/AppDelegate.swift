@@ -2,20 +2,24 @@ import AppKit
 import Foundation
 
 @MainActor
-final class CompanionAppDelegate: NSObject, NSApplicationDelegate {
-    private var server: CompanionServer?
+final class AppDelegate: NSObject, NSApplicationDelegate {
+    private var server: AppServer?
     private var isAgentLaunch: Bool {
         CommandLine.arguments.contains("--icli-agent")
     }
 
+    func applicationWillFinishLaunching(_ notification: Notification) {
+        NSApp.setActivationPolicy(.accessory)
+    }
+
     func applicationDidFinishLaunching(_ notification: Notification) {
         do {
-            let server = try CompanionServer(handler: CompanionRequestHandler())
+            let server = try AppServer(handler: AppRequestHandler())
             try server.start()
             self.server = server
 
             if !isAgentLaunch {
-                CompanionSettingsWindowController.shared.show()
+                showSettingsWindow()
             }
         } catch {
             presentFatalError(message: error.localizedDescription)
@@ -23,7 +27,7 @@ final class CompanionAppDelegate: NSObject, NSApplicationDelegate {
     }
 
     func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool {
-        CompanionSettingsWindowController.shared.show()
+        showSettingsWindow()
         return true
     }
 
@@ -35,11 +39,15 @@ final class CompanionAppDelegate: NSObject, NSApplicationDelegate {
         server?.stop()
     }
 
+    private func showSettingsWindow() {
+        AppWindowRouter.shared.showSettings()
+    }
+
     private func presentFatalError(message: String) {
         NSApp.activate(ignoringOtherApps: true)
         let alert = NSAlert()
         alert.alertStyle = .critical
-        alert.messageText = "iCLI couldn’t start"
+        alert.messageText = "iCLI couldn't start"
         alert.informativeText = message
         alert.runModal()
         NSApp.terminate(nil)
