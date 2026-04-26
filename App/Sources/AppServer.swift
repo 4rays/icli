@@ -82,6 +82,10 @@ final class AppServer {
         while true {
             let clientFD = accept(listenFD, nil, nil)
             if clientFD >= 0 {
+                // accept() inherits O_NONBLOCK from the listen socket on macOS;
+                // clear it so blocking read/write work correctly on the client fd.
+                let flags = fcntl(clientFD, F_GETFL)
+                if flags >= 0 { _ = fcntl(clientFD, F_SETFL, flags & ~O_NONBLOCK) }
                 UnixSocket.disableSigPipe(clientFD)
                 handleConnection(fd: clientFD)
                 continue
