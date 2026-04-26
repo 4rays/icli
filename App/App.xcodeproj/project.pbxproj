@@ -153,6 +153,7 @@
 				4E322C44DF996D309D1CC476 /* Resources */,
 				53DD1987F23A1D92228D0CF6 /* Frameworks */,
 				2AF5E7CACDC9967B09F0B891 /* Embed Frameworks */,
+				099BE7941D4DE3D533864B34 /* Embed CLI Binary */,
 			);
 			buildRules = (
 			);
@@ -208,6 +209,29 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		099BE7941D4DE3D533864B34 /* Embed CLI Binary */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"$(BUILT_PRODUCTS_DIR)/icli",
+			);
+			name = "Embed CLI Binary";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(BUILT_PRODUCTS_DIR)/$(CONTENTS_FOLDER_PATH)/Resources/bin/icli",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "set -e\nDEST=\"$BUILT_PRODUCTS_DIR/$CONTENTS_FOLDER_PATH/Resources/bin\"\nmkdir -p \"$DEST\"\ncp \"$BUILT_PRODUCTS_DIR/icli\" \"$DEST/icli\"";
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		A4214723D5630E8A8F81826D /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -260,9 +284,10 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = ../icli.entitlements;
-				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_IDENTITY = "Developer ID Application";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
+				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
