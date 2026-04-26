@@ -73,6 +73,18 @@ enum AppAuthorization {
         return statusLabel(EKEventStore.authorizationStatus(for: .event))
     }
 
+    // nonisolated gate check for store actors — applies the same cache logic without MainActor.
+    nonisolated static func isAuthorized(for entityType: EKEntityType) -> Bool {
+        let live = EKEventStore.authorizationStatus(for: entityType)
+        switch live {
+        case .fullAccess, .authorized: return true
+        case .notDetermined:
+            let cached = entityType == .reminder ? cachedReminders : cachedCalendars
+            return cached == .authorized
+        default: return false
+        }
+    }
+
     // Prefer the live value unless it's a stale notDetermined contradicting a cached grant.
     // Permissions can't regress from a known state back to notDetermined in TCC.
     private static func resolve(live: AuthorizationStatus, cached: AuthorizationStatus?) -> AuthorizationStatus {

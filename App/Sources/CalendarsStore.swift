@@ -5,10 +5,7 @@ actor CalendarsStore {
     private let eventStore = EKEventStore()
 
     nonisolated func requestAccess() throws {
-        switch EKEventStore.authorizationStatus(for: .event) {
-        case .fullAccess, .authorized:
-            break
-        default:
+        guard AppAuthorization.isAuthorized(for: .event) else {
             throw ICLIError.accessDenied("Calendars")
         }
     }

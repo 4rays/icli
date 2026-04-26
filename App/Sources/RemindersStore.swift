@@ -10,16 +10,9 @@ actor RemindersStore {
     }
 
     nonisolated func requestAccess() throws {
-        switch Self.authorizationStatus() {
-        case .fullAccess, .authorized:
-            break
-        default:
+        guard AppAuthorization.isAuthorized(for: .reminder) else {
             throw ICLIError.accessDenied("Reminders")
         }
-    }
-
-    static func authorizationStatus() -> EKAuthorizationStatus {
-        EKEventStore.authorizationStatus(for: .reminder)
     }
 
     func lists() async -> [ReminderList] {
