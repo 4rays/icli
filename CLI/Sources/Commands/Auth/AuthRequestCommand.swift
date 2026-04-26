@@ -16,7 +16,7 @@ enum AuthRequestCommand {
 
         Output.printAuthStatus(payload, format: format)
 
-        let failures = Set(["denied", "restricted", "write-only", "not-determined", "unknown"])
+        let failures: Set<AuthorizationStatus> = [.denied, .restricted, .writeOnly, .notDetermined, .unknown]
         if failures.contains(payload.reminders) || failures.contains(payload.calendars) {
             exit(1)
         }

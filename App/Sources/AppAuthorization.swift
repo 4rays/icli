@@ -3,11 +3,21 @@ import EventKit
 import Foundation
 
 enum AppAuthorization {
+    // EKEventStore.authorizationStatus(for:) returns stale notDetermined in-process on
+    // macOS 26 beta after a grant. Cache the last known good result so both the UI and
+    // the IPC handler report the correct status.
+    nonisolated(unsafe) private static var cachedReminders: AuthorizationStatus?
+    nonisolated(unsafe) private static var cachedCalendars: AuthorizationStatus?
+
     @MainActor
     static func status() -> AuthStatusPayload {
-        payload(
+        let live = (
             reminders: statusLabel(EKEventStore.authorizationStatus(for: .reminder)),
             calendars: statusLabel(EKEventStore.authorizationStatus(for: .event))
+        )
+        return payload(
+            reminders: resolve(live: live.reminders, cached: cachedReminders),
+            calendars: resolve(live: live.calendars, cached: cachedCalendars)
         )
     }
 
@@ -18,10 +28,16 @@ enum AppAuthorization {
 
         if args.reminders {
             remindersStatus = await requestReminders()
+            if remindersStatus != .notDetermined && remindersStatus != .skipped {
+                cachedReminders = remindersStatus
+            }
         }
 
         if args.calendars {
             calendarsStatus = await requestCalendars()
+            if calendarsStatus != .notDetermined && calendarsStatus != .skipped {
+                cachedCalendars = calendarsStatus
+            }
         }
 
         return payload(reminders: remindersStatus, calendars: calendarsStatus)
@@ -55,6 +71,13 @@ enum AppAuthorization {
         } catch {}
 
         return statusLabel(EKEventStore.authorizationStatus(for: .event))
+    }
+
+    // Prefer the live value unless it's a stale notDetermined contradicting a cached grant.
+    // Permissions can't regress from a known state back to notDetermined in TCC.
+    private static func resolve(live: AuthorizationStatus, cached: AuthorizationStatus?) -> AuthorizationStatus {
+        guard live == .notDetermined, let cached, cached != .notDetermined else { return live }
+        return cached
     }
 
     private static func statusLabel(_ status: EKAuthorizationStatus) -> AuthorizationStatus {

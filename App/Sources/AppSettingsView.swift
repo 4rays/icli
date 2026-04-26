@@ -1,9 +1,11 @@
 import AppKit
+import EventKit
 import SwiftUI
 
 struct AppSettingsView: View {
   @State private var remindersStatus: AuthorizationStatus
   @State private var calendarsStatus: AuthorizationStatus
+  @State private var requestError: Error?
 
   private let refreshOnAppear: Bool
 
@@ -29,11 +31,23 @@ struct AppSettingsView: View {
     .frame(width: 520, height: 390, alignment: .topLeading)
     .background(Color(nsColor: .windowBackgroundColor))
     .onAppear {
+      AppWindowRouter.shared.refreshAction = refresh
       guard refreshOnAppear else { return }
       refresh()
     }
-    .onReceive(NotificationCenter.default.publisher(for: .appSettingsShouldRefresh)) { _ in
+    .onReceive(NotificationCenter.default.publisher(for: .EKEventStoreChanged)) { _ in
       refresh()
+    }
+    .onReceive(NotificationCenter.default.publisher(for: NSApplication.didBecomeActiveNotification)) { _ in
+      refresh()
+    }
+    .alert(
+      "iCLI couldn't request access",
+      isPresented: Binding(get: { requestError != nil }, set: { if !$0 { requestError = nil } })
+    ) {
+      Button("OK", role: .cancel) {}
+    } message: {
+      Text(requestError?.localizedDescription ?? "")
     }
   }
 
@@ -74,7 +88,6 @@ struct AppSettingsView: View {
         .help("Refresh permission status")
         .accessibilityLabel("Refresh permission status")
       }
-      .frame(width: 464)
 
       VStack(alignment: .leading, spacing: 10) {
         PermissionRow(
@@ -101,8 +114,14 @@ struct AppSettingsView: View {
 
   private func refresh() {
     let status = AppAuthorization.status()
-    remindersStatus = status.reminders
-    calendarsStatus = status.calendars
+    // EKEventStore.authorizationStatus can return stale notDetermined in-process after a grant.
+    // Never downgrade a live non-notDetermined status — that transition is impossible in TCC.
+    if status.reminders != .notDetermined || remindersStatus == .notDetermined {
+      remindersStatus = status.reminders
+    }
+    if status.calendars != .notDetermined || calendarsStatus == .notDetermined {
+      calendarsStatus = status.calendars
+    }
   }
 
   private func handleRemindersButton() {
@@ -124,13 +143,16 @@ struct AppSettingsView: View {
   private func request(reminders: Bool, calendars: Bool) {
     Task { @MainActor in
       do {
-        _ = try await AppAuthorization.request(
+        let payload = try await AppAuthorization.request(
           AuthRequestArgs(
             reminders: reminders,
             calendars: calendars
           ))
+        // Use the payload directly — EKEventStore.authorizationStatus can be stale
+        // immediately after the grant dialog returns, but the request return value is fresh.
+        if reminders { remindersStatus = payload.reminders }
+        if calendars { calendarsStatus = payload.calendars }
         keepWindowVisible()
-        refresh()
         await refreshAfterPermissionSettles()
       } catch {
         refresh()
@@ -140,27 +162,21 @@ struct AppSettingsView: View {
   }
 
   private func refreshAfterPermissionSettles() async {
-    try? await Task.sleep(nanoseconds: 300_000_000)
+    try? await Task.sleep(for: .milliseconds(300))
     keepWindowVisible()
-    refresh()
-    try? await Task.sleep(nanoseconds: 1_000_000_000)
+    try? await Task.sleep(for: .seconds(1))
     keepWindowVisible()
-    refresh()
   }
 
   private func keepWindowVisible() {
+    // Permission dialog steals focus; re-assert window visibility
     NSApp.keyWindow?.makeKeyAndOrderFront(nil)
     NSApp.keyWindow?.orderFrontRegardless()
     NSApp.activate(ignoringOtherApps: true)
   }
 
   private func presentRequestError(_ error: Error) {
-    guard let window = NSApp.keyWindow else { return }
-    let alert = NSAlert()
-    alert.alertStyle = .warning
-    alert.messageText = "iCLI couldn't request access"
-    alert.informativeText = error.localizedDescription
-    alert.beginSheetModal(for: window) { _ in }
+    requestError = error
   }
 
   private func shouldOpenSystemSettings(for status: AuthorizationStatus) -> Bool {
@@ -199,7 +215,6 @@ private struct PermissionRow: View {
           .buttonStyle(.bordered)
       }
     }
-    .frame(width: 464)
   }
 
   private var buttonTitle: String {
@@ -227,10 +242,6 @@ private struct PermissionRow: View {
     default: return .secondary
     }
   }
-}
-
-extension Notification.Name {
-  static let appSettingsShouldRefresh = Notification.Name("appSettingsShouldRefresh")
 }
 
 #Preview("Settings Window") {

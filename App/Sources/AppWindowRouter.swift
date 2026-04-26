@@ -6,6 +6,7 @@ import Observation
 final class AppWindowRouter {
     static let shared = AppWindowRouter()
     var pendingShow = false
+    var refreshAction: (() -> Void)?
 
     private init() {}
 

@@ -4,21 +4,19 @@ import SwiftUI
 @main
 struct ICliApp: App {
     @NSApplicationDelegateAdaptor(AppDelegate.self) var delegate
-    @Environment(\.openWindow) private var openWindow
-    @State private var router = AppWindowRouter.shared
+    @Environment(\.openSettings) private var openSettings
+    let router = AppWindowRouter.shared
 
     var body: some Scene {
-        Window("iCLI Settings", id: "settings") {
+        Settings {
             AppSettingsView()
         }
         .windowResizability(.contentSize)
-        .defaultSize(width: 520, height: 390)
-        .restorationBehavior(.disabled)
         .onChange(of: router.pendingShow) { _, pending in
             guard pending else { return }
-            openWindow(id: "settings")
+            openSettings()
             NSApp.activate(ignoringOtherApps: true)
-            NotificationCenter.default.post(name: .appSettingsShouldRefresh, object: nil)
+            router.refreshAction?()
             router.pendingShow = false
         }
     }
