@@ -32,3 +32,21 @@
 - Keep the local `make install` path as a developer convenience only.
 - Ensure the CLI can discover the app both from the local dev install layout and from the Homebrew Cask app layout.
 - Keep the app bundle identifier stable as `net.4rays.icli` so TCC permissions attach to the signed app identity.
+
+## DMG Distribution (Non-Homebrew Users)
+
+- Offer a signed DMG as a secondary artifact alongside the zip — same app bundle, different container.
+- DMG alone leaves CLI-in-PATH unsolved; app should offer to install the CLI on first launch:
+  - Show a one-time prompt: "Install `icli` command-line tool to `/usr/local/bin`?"
+  - Requires `SMJobBless` or a privileged helper, or write to `~/.local/bin` (no sudo needed, but user must have it in PATH)
+  - Alternative: include an `Install CLI.command` script in the DMG for users who decline the prompt
+- GitHub Releases should publish both `iCLI-{version}.zip` (for Cask) and `iCLI-{version}.dmg` (for direct download).
+
+## Pre-Distribution Checklist
+
+- [ ] Code sign app and CLI with Developer ID
+- [ ] Notarize and staple
+- [ ] CI pipeline builds release artifacts on tag push
+- [ ] Homebrew tap repository set up (e.g. `4rays/homebrew-tap`)
+- [ ] Version scheme decided (semver recommended)
+- [ ] TCC entitlements verified on clean machine (Calendars, Reminders)
