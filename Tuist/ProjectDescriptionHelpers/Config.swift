@@ -1,6 +1,7 @@
 import ProjectDescription
 
 public let teamReverseDomain = "net.4rays"
+public let teamID = "HCTW65QDC4"
 public let appTarget: TargetReference = "iCLI"
 public let cliTarget: TargetReference = "icli"
 

@@ -21,6 +21,7 @@ extension Project {
                     settings: .settings(
                         base: [
                             "DEFINES_MODULE": "YES",
+                            "DEVELOPMENT_TEAM": .string(teamID),
                             "SWIFT_VERSION": "6.0",
                         ]
                     )
@@ -52,6 +53,7 @@ extension Project {
                     settings: .settings(
                         base: [
                             "DEFINES_MODULE": "YES",
+                            "DEVELOPMENT_TEAM": .string(teamID),
                             "LD_RUNPATH_SEARCH_PATHS": "$(inherited) @executable_path",
                             "PRODUCT_NAME": .string(name),
                             "SWIFT_VERSION": "6.0",

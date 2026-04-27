@@ -260,6 +260,7 @@
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "-";
 				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = HCTW65QDC4;
 				INFOPLIST_FILE = "Derived/InfoPlists/icli-Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path";
 				MACOSX_DEPLOYMENT_TARGET = 15.0;
@@ -447,6 +448,7 @@
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "-";
 				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = HCTW65QDC4;
 				INFOPLIST_FILE = "Derived/InfoPlists/icli-Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path";
 				MACOSX_DEPLOYMENT_TARGET = 15.0;
