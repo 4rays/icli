@@ -21,9 +21,13 @@ let project = Project(
         .post(
           script: """
           set -e
+          CLI="$OBJROOT/UninstalledProducts/$PLATFORM_NAME/icli"
+          if [ ! -f "$CLI" ]; then
+            CLI="$BUILT_PRODUCTS_DIR/icli"
+          fi
           DEST="$BUILT_PRODUCTS_DIR/$CONTENTS_FOLDER_PATH/Resources/bin"
           mkdir -p "$DEST"
-          cp "$BUILT_PRODUCTS_DIR/icli" "$DEST/icli"
+          cp "$CLI" "$DEST/icli"
           """,
           name: "Embed CLI Binary",
           inputPaths: ["$(BUILT_PRODUCTS_DIR)/icli"],
@@ -50,7 +54,10 @@ let project = Project(
           ]),
           .release(name: "Release", settings: [
             "CODE_SIGN_IDENTITY": "Developer ID Application",
+            "CODE_SIGN_STYLE": "Manual",
+            "DEVELOPMENT_TEAM": "RGS98ZRDY6",
             "ENABLE_HARDENED_RUNTIME": "YES",
+            "PROVISIONING_PROFILE_SPECIFIER": "",
           ]),
         ]
       )
@@ -60,7 +67,7 @@ let project = Project(
     .scheme(
       name: appTarget.targetName,
       shared: true,
-      buildAction: .buildAction(targets: [appTarget]),
+      buildAction: .buildAction(targets: [appTarget, cliTarget]),
       runAction: .runAction(
         configuration: "Debug",
         executable: appTarget

@@ -228,7 +228,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "set -e\nDEST=\"$BUILT_PRODUCTS_DIR/$CONTENTS_FOLDER_PATH/Resources/bin\"\nmkdir -p \"$DEST\"\ncp \"$BUILT_PRODUCTS_DIR/icli\" \"$DEST/icli\"";
+			shellScript = "set -e\nCLI=\"$OBJROOT/UninstalledProducts/$PLATFORM_NAME/icli\"\nif [ ! -f \"$CLI\" ]; then\n  CLI=\"$BUILT_PRODUCTS_DIR/icli\"\nfi\nDEST=\"$BUILT_PRODUCTS_DIR/$CONTENTS_FOLDER_PATH/Resources/bin\"\nmkdir -p \"$DEST\"\ncp \"$CLI\" \"$DEST/icli\"";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -286,9 +286,9 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = ../icli.entitlements;
 				CODE_SIGN_IDENTITY = "Developer ID Application";
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
-				DEVELOPMENT_TEAM = HCTW65QDC4;
+				DEVELOPMENT_TEAM = RGS98ZRDY6;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = Info.plist;
@@ -303,6 +303,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = net.4rays.icli;
 				PRODUCT_NAME = iCLI;
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = macosx;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";

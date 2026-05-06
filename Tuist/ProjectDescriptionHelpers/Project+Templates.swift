@@ -56,6 +56,7 @@ extension Project {
                             "DEVELOPMENT_TEAM": .string(teamID),
                             "LD_RUNPATH_SEARCH_PATHS": "$(inherited) @executable_path",
                             "PRODUCT_NAME": .string(name),
+                            "SKIP_INSTALL": "YES",
                             "SWIFT_VERSION": "6.0",
                         ]
                     )

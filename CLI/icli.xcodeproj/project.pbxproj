@@ -271,6 +271,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = net.4rays.icli.cli;
 				PRODUCT_NAME = icli;
 				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				SWIFT_VERSION = 6.0;
@@ -459,6 +460,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = net.4rays.icli.cli;
 				PRODUCT_NAME = icli;
 				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = (
 					"$(inherited)",
 					DEBUG,
