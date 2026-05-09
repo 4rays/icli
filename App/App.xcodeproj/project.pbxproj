@@ -218,6 +218,7 @@
 			inputFileListPaths = (
 			);
 			inputPaths = (
+				"$(OBJROOT)/UninstalledProducts/$(PLATFORM_NAME)/icli",
 				"$(BUILT_PRODUCTS_DIR)/icli",
 			);
 			name = "Embed CLI Binary";

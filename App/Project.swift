@@ -30,7 +30,10 @@ let project = Project(
           cp "$CLI" "$DEST/icli"
           """,
           name: "Embed CLI Binary",
-          inputPaths: ["$(BUILT_PRODUCTS_DIR)/icli"],
+          inputPaths: [
+            "$(OBJROOT)/UninstalledProducts/$(PLATFORM_NAME)/icli",
+            "$(BUILT_PRODUCTS_DIR)/icli",
+          ],
           outputPaths: ["$(BUILT_PRODUCTS_DIR)/$(CONTENTS_FOLDER_PATH)/Resources/bin/icli"]
         )
       ],
