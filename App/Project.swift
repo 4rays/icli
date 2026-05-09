@@ -67,7 +67,7 @@ let project = Project(
     .scheme(
       name: appTarget.targetName,
       shared: true,
-      buildAction: .buildAction(targets: [appTarget, cliTarget]),
+      buildAction: .buildAction(targets: [appTarget]),
       runAction: .runAction(
         configuration: "Debug",
         executable: appTarget
