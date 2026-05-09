@@ -1,0 +1,109 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  release:
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Tuist
+        run: brew install tuist
+
+      - name: Generate Xcode project
+        run: tuist generate --no-open
+
+      - name: Import signing certificate
+        env:
+          CERT_BASE64: ${{ secrets.DEVELOPER_ID_CERT }}
+          CERT_PASSWORD: ${{ secrets.DEVELOPER_ID_CERT_PASSWORD }}
+        run: |
+          KEYCHAIN_PATH=$RUNNER_TEMP/signing.keychain-db
+          KEYCHAIN_PASSWORD=$(openssl rand -hex 16)
+
+          security create-keychain -p "$KEYCHAIN_PASSWORD" "$KEYCHAIN_PATH"
+          security set-keychain-settings -lut 21600 "$KEYCHAIN_PATH"
+          security unlock-keychain -p "$KEYCHAIN_PASSWORD" "$KEYCHAIN_PATH"
+
+          echo "$CERT_BASE64" | base64 --decode -o "$RUNNER_TEMP/cert.p12"
+          security import "$RUNNER_TEMP/cert.p12" \
+            -k "$KEYCHAIN_PATH" \
+            -P "$CERT_PASSWORD" \
+            -T /usr/bin/codesign \
+            -T /usr/bin/xcodebuild
+          security set-key-partition-list \
+            -S apple-tool:,apple: \
+            -s -k "$KEYCHAIN_PASSWORD" "$KEYCHAIN_PATH"
+          security list-keychains -d user -s "$KEYCHAIN_PATH" login.keychain
+
+      - name: Archive
+        run: |
+          xcodebuild archive \
+            -workspace iCLI.xcworkspace \
+            -scheme iCLI-Release \
+            -configuration Release \
+            -archivePath "$RUNNER_TEMP/iCLI.xcarchive"
+
+      - name: Export
+        run: |
+          cat > "$RUNNER_TEMP/ExportOptions.plist" << 'EOF'
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0">
+          <dict>
+            <key>method</key>
+            <string>developer-id</string>
+            <key>teamID</key>
+            <string>RGS98ZRDY6</string>
+            <key>signingStyle</key>
+            <string>manual</string>
+            <key>signingCertificate</key>
+            <string>Developer ID Application</string>
+          </dict>
+          </plist>
+          EOF
+
+          xcodebuild -exportArchive \
+            -archivePath "$RUNNER_TEMP/iCLI.xcarchive" \
+            -exportPath "$RUNNER_TEMP/export" \
+            -exportOptionsPlist "$RUNNER_TEMP/ExportOptions.plist"
+
+      - name: Notarize
+        env:
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          ASC_PRIVATE_KEY: ${{ secrets.ASC_PRIVATE_KEY }}
+        run: |
+          echo "$ASC_PRIVATE_KEY" > "$RUNNER_TEMP/asc_key.p8"
+
+          ditto -c -k --keepParent \
+            "$RUNNER_TEMP/export/iCLI.app" \
+            "$RUNNER_TEMP/iCLI.zip"
+
+          xcrun notarytool submit "$RUNNER_TEMP/iCLI.zip" \
+            --key "$RUNNER_TEMP/asc_key.p8" \
+            --key-id "$ASC_KEY_ID" \
+            --issuer "$ASC_ISSUER_ID" \
+            --wait
+
+          xcrun stapler staple "$RUNNER_TEMP/export/iCLI.app"
+
+      - name: Package release artifact
+        run: |
+          VERSION="${GITHUB_REF_NAME#v}"
+          ditto -c -k --keepParent \
+            "$RUNNER_TEMP/export/iCLI.app" \
+            "$RUNNER_TEMP/iCLI-${VERSION}.zip"
+          echo "VERSION=$VERSION" >> "$GITHUB_ENV"
+          echo "ARTIFACT=$RUNNER_TEMP/iCLI-${VERSION}.zip" >> "$GITHUB_ENV"
+
+      - name: Create GitHub release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: ${{ env.ARTIFACT }}
+          name: iCLI ${{ env.VERSION }}
+          generate_release_notes: true
