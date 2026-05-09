@@ -60,6 +60,7 @@ let project = Project(
             "CODE_SIGN_STYLE": "Manual",
             "DEVELOPMENT_TEAM": "RGS98ZRDY6",
             "ENABLE_HARDENED_RUNTIME": "YES",
+            "ENABLE_USER_SCRIPT_SANDBOXING": "NO",
             "PROVISIONING_PROFILE_SPECIFIER": "",
           ]),
         ]
