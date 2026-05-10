@@ -22,7 +22,15 @@ A command-line interface for macOS Calendar and Reminders, backed by a sandboxed
   export PATH="$HOME/.local/bin:$PATH"
   ```
 
-## Installation
+## Install
+
+Install via Homebrew:
+
+```sh
+brew install --cask 4rays/tap/icli
+```
+
+Build and install from source:
 
 ```sh
 make install
