@@ -47,6 +47,12 @@ make uninstall
 
 ## Development
 
+Generate the Xcode workspace first:
+
+```sh
+tuist generate --no-open
+```
+
 ```sh
 make generate   # regenerate Xcode workspace via Tuist
 make build      # build without installing
