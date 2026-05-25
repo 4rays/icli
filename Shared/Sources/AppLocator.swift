@@ -11,10 +11,30 @@ public enum AppLocator {
             return URL(fileURLWithPath: override)
         }
 
+        if let containingApp = containingAppBundle(for: executableURL, fileManager: fileManager) {
+            return containingApp
+        }
+
         let sibling = executableURL.deletingLastPathComponent()
             .appendingPathComponent(AppPaths.appBundleName, isDirectory: true)
         if fileManager.fileExists(atPath: sibling.path) {
             return sibling
+        }
+
+        return nil
+    }
+
+    private static func containingAppBundle(
+        for executableURL: URL,
+        fileManager: FileManager
+    ) -> URL? {
+        var current = executableURL.standardizedFileURL
+
+        while current.path != current.deletingLastPathComponent().path {
+            if current.pathExtension == "app", fileManager.fileExists(atPath: current.path) {
+                return current
+            }
+            current.deleteLastPathComponent()
         }
 
         return nil
