@@ -4,13 +4,13 @@ import Observation
 @MainActor
 @Observable
 final class AppWindowRouter {
-    static let shared = AppWindowRouter()
-    var pendingShow = false
-    var refreshAction: (() -> Void)?
+  static let shared = AppWindowRouter()
+  var pendingShow = false
+  var refreshAction: (() -> Void)?
 
-    private init() {}
+  private init() {}
 
-    func showSettings() {
-        pendingShow = true
-    }
+  func showSettings() {
+    pendingShow = true
+  }
 }

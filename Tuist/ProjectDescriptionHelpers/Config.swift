@@ -5,14 +5,14 @@ public let teamID = "HCTW65QDC4"
 public let appTarget: TargetReference = "iCLI"
 public let cliTarget: TargetReference = "icli"
 
-public extension ProjectDescription.DeploymentTargets {
-    static var platforms: DeploymentTargets {
-        .macOS("15.0")
-    }
+extension ProjectDescription.DeploymentTargets {
+  public static var platforms: DeploymentTargets {
+    .macOS("15.0")
+  }
 }
 
-public extension ProjectDescription.Destinations {
-    static var destinations: Destinations {
-        [.mac]
-    }
+extension ProjectDescription.Destinations {
+  public static var destinations: Destinations {
+    [.mac]
+  }
 }
