@@ -16,7 +16,7 @@ enum CommandRouter {
     }
 
     if args.first == "--version" || args.first == "-v" {
-      print("icli 0.2.1")
+      print("icli 0.2.2")
       exit(0)
     }
 
@@ -32,6 +32,8 @@ enum CommandRouter {
         try await PermissionCommand.run(args: args, format: format)
       case "status":
         try await StatusCommand.run(format: format)
+      case "settings":
+        try await PermissionSettingsCommand.run(format: format)
       default:
         Output.printError("Unknown command: \(group)")
         printHelp()
@@ -67,6 +69,7 @@ enum CommandRouter {
         calendar    Manage Apple Calendar events
         permission  Manage system permissions
         status      Show permission status
+        settings    Open iCLI settings
 
       OPTIONS:
         --format <fmt>   Output format: human (default), json, plain

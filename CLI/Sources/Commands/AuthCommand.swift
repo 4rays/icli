@@ -13,8 +13,6 @@ enum PermissionCommand {
     switch cmd {
     case "request":
       try await PermissionRequestCommand.run(args: ParsedArgs(args), format: format)
-    case "settings":
-      try await PermissionSettingsCommand.run(format: format)
     case "reset":
       try PermissionResetCommand.run(format: format)
     default:
@@ -29,7 +27,6 @@ enum PermissionCommand {
 
       COMMANDS:
         request   Request Reminders and/or Calendar permission
-        settings  Open the iCLI settings window
         reset     Reset all permissions (requires relaunch)
 
       OPTIONS for request:
