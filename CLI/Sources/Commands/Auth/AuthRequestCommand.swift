@@ -1,6 +1,6 @@
 import Foundation
 
-enum AuthRequestCommand {
+enum PermissionRequestCommand {
   static func run(args: ParsedArgs, format: OutputFormat) async throws {
     let onlyReminders = args.hasFlag("--reminders", "--reminder")
     let onlyCalendars = args.hasFlag("--calendars", "--calendar")

@@ -1,6 +1,6 @@
 import Foundation
 
-enum AuthSettingsCommand {
+enum PermissionSettingsCommand {
   static func run(format: OutputFormat) async throws {
     let _: EmptyArgs = try await AppClient.shared.send(.appShowSettings)
 

@@ -16,7 +16,7 @@ enum CommandRouter {
     }
 
     if args.first == "--version" || args.first == "-v" {
-      print("icli 0.1.6")
+      print("icli 0.2.0")
       exit(0)
     }
 
@@ -28,10 +28,12 @@ enum CommandRouter {
         try await ReminderCommand.run(args: args, format: format)
       case "calendar", "calendars", "cal", "c":
         try await CalendarCommand.run(args: args, format: format)
-      case "auth":
-        try await AuthCommand.run(args: args, format: format)
+      case "permission", "p":
+        try await PermissionCommand.run(args: args, format: format)
+      case "status":
+        try await StatusCommand.run(format: format)
       default:
-        Output.printError("Unknown command group: \(group)")
+        Output.printError("Unknown command: \(group)")
         printHelp()
         exit(1)
       }
@@ -60,10 +62,11 @@ enum CommandRouter {
       """
       USAGE: icli <group> <command> [options]
 
-      GROUPS:
+      COMMANDS:
         reminder    Manage Apple Reminders
         calendar    Manage Apple Calendar events
-        auth        Manage system permissions
+        permission  Manage system permissions
+        status      Show permission status
 
       OPTIONS:
         --format <fmt>   Output format: human (default), json, plain

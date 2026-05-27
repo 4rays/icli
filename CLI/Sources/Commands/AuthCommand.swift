@@ -1,6 +1,6 @@
 import Foundation
 
-enum AuthCommand {
+enum PermissionCommand {
   static func run(args: [String], format: OutputFormat) async throws {
     if args.isEmpty || args.first == "--help" || args.first == "-h" {
       printHelp()
@@ -12,25 +12,25 @@ enum AuthCommand {
 
     switch cmd {
     case "request":
-      try await AuthRequestCommand.run(args: ParsedArgs(args), format: format)
+      try await PermissionRequestCommand.run(args: ParsedArgs(args), format: format)
     case "settings":
-      try await AuthSettingsCommand.run(format: format)
-    case "status":
-      try await AuthStatusCommand.run(format: format)
+      try await PermissionSettingsCommand.run(format: format)
+    case "reset":
+      try PermissionResetCommand.run(format: format)
     default:
-      throw ICLIError.operationFailed("Unknown auth command: \(cmd)")
+      throw ICLIError.operationFailed("Unknown permission command: \(cmd)")
     }
   }
 
   static func printHelp() {
     print(
       """
-      USAGE: icli auth <command>
+      USAGE: icli permission <command>
 
       COMMANDS:
         request   Request Reminders and/or Calendar permission
         settings  Open the iCLI settings window
-        status    Show current authorization status
+        reset     Reset all permissions (requires relaunch)
 
       OPTIONS for request:
         --reminders, --reminder   Request only Reminders access

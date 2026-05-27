@@ -20,8 +20,8 @@ enum Output {
       }
       let now = Date()
       for item in items {
-        let check = item.isCompleted ? "x" : " "
-        var line = "[\(check)] \(item.title)  [\(item.listName)]"
+        let check = item.isCompleted ? "x" : "-"
+        var line = "\(check) \(item.title)  [\(item.listName)]"
         if let due = item.dueDate {
           let tag = !item.isCompleted && due < now ? " ⚠ overdue" : ""
           line += "  due \(DateParsing.formatDisplay(due))\(tag)"
