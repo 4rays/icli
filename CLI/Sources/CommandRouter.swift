@@ -16,7 +16,7 @@ enum CommandRouter {
     }
 
     if args.first == "--version" || args.first == "-v" {
-      print("icli 0.1.4")
+      print("icli 0.1.5")
       exit(0)
     }
 
