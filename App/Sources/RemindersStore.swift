@@ -10,10 +10,8 @@ actor RemindersStore {
     }
 
     func requestAccess() async throws {
-        guard AppAuthorization.isAuthorized(for: .reminder) else {
-            throw ICLIError.accessDenied("Reminders")
-        }
-        try await eventStore.requestFullAccessToReminders()
+        let granted = (try? await eventStore.requestFullAccessToReminders()) ?? false
+        guard granted else { throw ICLIError.accessDenied("Reminders") }
     }
 
     func lists() async -> [ReminderList] {
