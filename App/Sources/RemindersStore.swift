@@ -63,7 +63,6 @@ actor RemindersStore {
         reminder.calendar = calendar
         reminder.priority = draft.priority.eventKitValue
         reminder.url = draft.url
-        reminder.location = draft.location
         if let due = draft.dueDate {
             reminder.dueDateComponents = self.calendar.dateComponents([.year, .month, .day, .hour, .minute], from: due)
         }
@@ -87,11 +86,6 @@ actor RemindersStore {
             reminder.url = nil
         } else if let url = update.url {
             reminder.url = url
-        }
-        if update.clearLocation {
-            reminder.location = nil
-        } else if let location = update.location {
-            reminder.location = location
         }
         try eventStore.save(reminder, commit: true)
         return makeItem(reminder)
@@ -130,7 +124,6 @@ actor RemindersStore {
             let dueDate: Date?
             let priority: Int
             let url: URL?
-            let location: String?
         }
 
         let rawList = await withCheckedContinuation { (continuation: CheckedContinuation<[RawData], Never>) in
@@ -147,8 +140,7 @@ actor RemindersStore {
                         completionDate: reminder.completionDate,
                         dueDate: reminder.dueDateComponents.flatMap { Calendar.current.date(from: $0) },
                         priority: Int(reminder.priority),
-                        url: reminder.url,
-                        location: reminder.location
+                        url: reminder.url
                     )
                 }
                 continuation.resume(returning: data)
@@ -166,8 +158,7 @@ actor RemindersStore {
                 dueDate: data.dueDate,
                 listID: data.listID,
                 listName: data.listName,
-                url: data.url,
-                location: data.location
+                url: data.url
             )
         }
     }
@@ -204,8 +195,7 @@ actor RemindersStore {
             dueDate: reminder.dueDateComponents.flatMap { calendar.date(from: $0) },
             listID: reminder.calendar.calendarIdentifier,
             listName: reminder.calendar.title,
-            url: reminder.url,
-            location: reminder.location
+            url: reminder.url
         )
     }
 }

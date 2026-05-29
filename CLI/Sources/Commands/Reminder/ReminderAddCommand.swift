@@ -14,7 +14,6 @@ enum ReminderAddCommand {
     let notes = args.option("--notes", "-n")
     let priorityStr = args.option("--priority", "-p")
     let urlStr = args.option("--url", "-u")
-    let locationStr = args.option("--location", "-L")
 
     let dueDate: Date?
     if let dueStr {
@@ -46,7 +45,7 @@ enum ReminderAddCommand {
       url = nil
     }
 
-    let draft = ReminderDraft(title: title, notes: notes, dueDate: dueDate, priority: priority, url: url, location: locationStr)
+    let draft = ReminderDraft(title: title, notes: notes, dueDate: dueDate, priority: priority, url: url)
     let item: ReminderItem = try await AppClient.shared.send(
       .reminderAdd,
       args: ReminderAddArgs(draft: draft, listName: listFlag)

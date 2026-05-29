@@ -12,7 +12,6 @@ enum ReminderEditCommand {
     let newNotes = args.option("--notes", "-n")
     let priorityStr = args.option("--priority", "-p")
     let urlStr = args.option("--url", "-u")
-    let locationStr = args.option("--location", "-L")
 
     var update = ReminderUpdate()
     if let t = newTitle { update.title = t }
@@ -46,13 +45,6 @@ enum ReminderEditCommand {
       }
     }
 
-    if let locationStr {
-      if locationStr.lowercased() == "none" {
-        update.clearLocation = true
-      } else {
-        update.location = locationStr
-      }
-    }
 
     let item: ReminderItem = try await AppClient.shared.send(
       .reminderEdit,

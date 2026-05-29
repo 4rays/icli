@@ -27,7 +27,6 @@ enum Output {
           line += "  due \(DateParsing.formatDisplay(due))\(tag)"
         }
         if item.priority != .none { line += "  (\(item.priority.rawValue))" }
-        if let loc = item.location, !loc.isEmpty { line += "  📍 \(loc)" }
         if let url = item.url { line += "  🔗 \(url.absoluteString)" }
         print(line)
       }
