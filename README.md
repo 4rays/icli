@@ -6,6 +6,10 @@ A command-line interface for macOS Calendar and Reminders, backed by a sandboxed
 
 `icli` is a thin CLI that communicates with a companion macOS app (`iCLI.app`) over a local Unix socket. The app holds Calendar and Reminders entitlements; the CLI forwards commands to it and prints the results.
 
+## Skills (Optional)
+
+npx skills add https://github.com/4rays/xbridge
+
 ## Prerequisites
 
 - **macOS 14 (Sonoma) or later**
