@@ -13,6 +13,8 @@ enum ReminderAddCommand {
     let dueStr = args.option("--due", "-d")
     let notes = args.option("--notes", "-n")
     let priorityStr = args.option("--priority", "-p")
+    let urlStr = args.option("--url", "-u")
+    let locationStr = args.option("--location", "-L")
 
     let dueDate: Date?
     if let dueStr {
@@ -34,7 +36,17 @@ enum ReminderAddCommand {
       priority = .none
     }
 
-    let draft = ReminderDraft(title: title, notes: notes, dueDate: dueDate, priority: priority)
+    let url: URL?
+    if let urlStr {
+      guard let u = URL(string: urlStr) else {
+        throw ICLIError.invalidArgument("Cannot parse URL: \(urlStr)")
+      }
+      url = u
+    } else {
+      url = nil
+    }
+
+    let draft = ReminderDraft(title: title, notes: notes, dueDate: dueDate, priority: priority, url: url, location: locationStr)
     let item: ReminderItem = try await AppClient.shared.send(
       .reminderAdd,
       args: ReminderAddArgs(draft: draft, listName: listFlag)

@@ -11,6 +11,8 @@ enum ReminderEditCommand {
     let dueStr = args.option("--due", "-d")
     let newNotes = args.option("--notes", "-n")
     let priorityStr = args.option("--priority", "-p")
+    let urlStr = args.option("--url", "-u")
+    let locationStr = args.option("--location", "-L")
 
     var update = ReminderUpdate()
     if let t = newTitle { update.title = t }
@@ -32,6 +34,24 @@ enum ReminderEditCommand {
         throw ICLIError.invalidArgument("Priority must be: none, low, medium, high")
       }
       update.priority = p
+    }
+
+    if let urlStr {
+      if urlStr.lowercased() == "none" {
+        update.clearURL = true
+      } else if let u = URL(string: urlStr) {
+        update.url = u
+      } else {
+        throw ICLIError.invalidArgument("Cannot parse URL: \(urlStr)")
+      }
+    }
+
+    if let locationStr {
+      if locationStr.lowercased() == "none" {
+        update.clearLocation = true
+      } else {
+        update.location = locationStr
+      }
     }
 
     let item: ReminderItem = try await AppClient.shared.send(

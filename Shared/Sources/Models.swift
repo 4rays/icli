@@ -78,6 +78,8 @@ public struct ReminderItem: Identifiable, Codable, Sendable, Equatable {
   public let dueDate: Date?
   public let listID: String
   public let listName: String
+  public let url: URL?
+  public let location: String?
 
   public init(
     id: String,
@@ -88,7 +90,9 @@ public struct ReminderItem: Identifiable, Codable, Sendable, Equatable {
     priority: ReminderPriority,
     dueDate: Date?,
     listID: String,
-    listName: String
+    listName: String,
+    url: URL? = nil,
+    location: String? = nil
   ) {
     self.id = id
     self.title = title
@@ -99,6 +103,8 @@ public struct ReminderItem: Identifiable, Codable, Sendable, Equatable {
     self.dueDate = dueDate
     self.listID = listID
     self.listName = listName
+    self.url = url
+    self.location = location
   }
 }
 
@@ -107,12 +113,23 @@ public struct ReminderDraft: Codable, Sendable, Equatable {
   public let notes: String?
   public let dueDate: Date?
   public let priority: ReminderPriority
+  public let url: URL?
+  public let location: String?
 
-  public init(title: String, notes: String?, dueDate: Date?, priority: ReminderPriority) {
+  public init(
+    title: String,
+    notes: String?,
+    dueDate: Date?,
+    priority: ReminderPriority,
+    url: URL? = nil,
+    location: String? = nil
+  ) {
     self.title = title
     self.notes = notes
     self.dueDate = dueDate
     self.priority = priority
+    self.url = url
+    self.location = location
   }
 }
 
@@ -124,6 +141,10 @@ public struct ReminderUpdate: Codable, Sendable, Equatable {
   public var priority: ReminderPriority?
   public var listName: String?
   public var isCompleted: Bool?
+  public var url: URL?
+  public var clearURL: Bool
+  public var location: String?
+  public var clearLocation: Bool
 
   public init(
     title: String? = nil,
@@ -132,7 +153,11 @@ public struct ReminderUpdate: Codable, Sendable, Equatable {
     clearDueDate: Bool = false,
     priority: ReminderPriority? = nil,
     listName: String? = nil,
-    isCompleted: Bool? = nil
+    isCompleted: Bool? = nil,
+    url: URL? = nil,
+    clearURL: Bool = false,
+    location: String? = nil,
+    clearLocation: Bool = false
   ) {
     self.title = title
     self.notes = notes
@@ -141,6 +166,10 @@ public struct ReminderUpdate: Codable, Sendable, Equatable {
     self.priority = priority
     self.listName = listName
     self.isCompleted = isCompleted
+    self.url = url
+    self.clearURL = clearURL
+    self.location = location
+    self.clearLocation = clearLocation
   }
 }
 

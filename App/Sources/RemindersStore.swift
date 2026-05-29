@@ -62,6 +62,8 @@ actor RemindersStore {
         reminder.notes = draft.notes
         reminder.calendar = calendar
         reminder.priority = draft.priority.eventKitValue
+        reminder.url = draft.url
+        reminder.location = draft.location
         if let due = draft.dueDate {
             reminder.dueDateComponents = self.calendar.dateComponents([.year, .month, .day, .hour, .minute], from: due)
         }
@@ -81,6 +83,16 @@ actor RemindersStore {
         if let priority = update.priority { reminder.priority = priority.eventKitValue }
         if let listName = update.listName { reminder.calendar = try ekCalendar(named: listName) }
         if let completed = update.isCompleted { reminder.isCompleted = completed }
+        if update.clearURL {
+            reminder.url = nil
+        } else if let url = update.url {
+            reminder.url = url
+        }
+        if update.clearLocation {
+            reminder.location = nil
+        } else if let location = update.location {
+            reminder.location = location
+        }
         try eventStore.save(reminder, commit: true)
         return makeItem(reminder)
     }
@@ -117,6 +129,8 @@ actor RemindersStore {
             let completionDate: Date?
             let dueDate: Date?
             let priority: Int
+            let url: URL?
+            let location: String?
         }
 
         let rawList = await withCheckedContinuation { (continuation: CheckedContinuation<[RawData], Never>) in
@@ -132,7 +146,9 @@ actor RemindersStore {
                         isCompleted: reminder.isCompleted,
                         completionDate: reminder.completionDate,
                         dueDate: reminder.dueDateComponents.flatMap { Calendar.current.date(from: $0) },
-                        priority: Int(reminder.priority)
+                        priority: Int(reminder.priority),
+                        url: reminder.url,
+                        location: reminder.location
                     )
                 }
                 continuation.resume(returning: data)
@@ -149,7 +165,9 @@ actor RemindersStore {
                 priority: ReminderPriority(eventKitValue: data.priority),
                 dueDate: data.dueDate,
                 listID: data.listID,
-                listName: data.listName
+                listName: data.listName,
+                url: data.url,
+                location: data.location
             )
         }
     }
@@ -185,7 +203,9 @@ actor RemindersStore {
             priority: ReminderPriority(eventKitValue: Int(reminder.priority)),
             dueDate: reminder.dueDateComponents.flatMap { calendar.date(from: $0) },
             listID: reminder.calendar.calendarIdentifier,
-            listName: reminder.calendar.title
+            listName: reminder.calendar.title,
+            url: reminder.url,
+            location: reminder.location
         )
     }
 }
