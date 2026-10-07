@@ -18,7 +18,9 @@ actor CalendarsStore {
     func events(start: Date, end: Date, calendarName: String? = nil) throws -> [CalendarEvent] {
         var calendars = eventStore.calendars(for: .event)
         if let calendarName {
-            calendars = calendars.filter { $0.title.lowercased() == calendarName.lowercased() }
+            calendars = calendars.filter {
+                $0.title.compare(calendarName, options: [.caseInsensitive, .diacriticInsensitive]) == .orderedSame
+            }
             if calendars.isEmpty { throw ICLIError.calendarNotFound(calendarName) }
         }
         let predicate = eventStore.predicateForEvents(withStart: start, end: end, calendars: calendars)
@@ -42,14 +44,16 @@ actor CalendarsStore {
             event.endDate = draft.endDate
         }
 
-        var targetCalendar = eventStore.defaultCalendarForNewEvents
         if let name = draft.calendarName {
-            if let match = eventStore.calendars(for: .event)
-                .first(where: { $0.title.lowercased() == name.lowercased() }) {
-                targetCalendar = match
+            guard let match = eventStore.calendars(for: .event).first(where: {
+                $0.title.compare(name, options: [.caseInsensitive, .diacriticInsensitive]) == .orderedSame
+            }) else {
+                throw ICLIError.calendarNotFound(name)
             }
+            event.calendar = match
+        } else {
+            event.calendar = eventStore.defaultCalendarForNewEvents
         }
-        event.calendar = targetCalendar
 
         try eventStore.save(event, span: .thisEvent, commit: true)
         return makeEvent(event)

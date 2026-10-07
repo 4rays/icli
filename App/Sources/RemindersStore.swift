@@ -42,7 +42,9 @@ actor RemindersStore {
     func reminders(in listName: String? = nil, includeCompleted: Bool) async throws -> [ReminderItem] {
         let calendars: [EKCalendar]
         if let listName {
-            calendars = eventStore.calendars(for: .reminder).filter { $0.title == listName }
+            calendars = eventStore.calendars(for: .reminder).filter {
+                $0.title.compare(listName, options: [.caseInsensitive, .diacriticInsensitive]) == .orderedSame
+            }
             if calendars.isEmpty { throw ICLIError.listNotFound(listName) }
         } else {
             calendars = eventStore.calendars(for: .reminder)
@@ -172,7 +174,9 @@ actor RemindersStore {
 
     private func ekCalendar(named name: String?) throws -> EKCalendar {
         if let name {
-            guard let calendar = eventStore.calendars(for: .reminder).first(where: { $0.title == name }) else {
+            guard let calendar = eventStore.calendars(for: .reminder).first(where: {
+                $0.title.compare(name, options: [.caseInsensitive, .diacriticInsensitive]) == .orderedSame
+            }) else {
                 throw ICLIError.listNotFound(name)
             }
             return calendar

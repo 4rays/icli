@@ -6,7 +6,7 @@ version: 0.1.0
 
 # icli
 
-icli is a macOS menu bar app with a CLI for managing Apple Reminders and Calendar events. The CLI communicates with the app over a Unix socket — the iCLI app must be running.
+icli is a macOS accessory app with a CLI for managing Apple Reminders and Calendar events. The CLI communicates with the app over a Unix socket and launches `iCLI.app` if it is not already running.
 
 ## Command Structure
 
@@ -18,6 +18,7 @@ GROUPS:
   calendar    Manage Apple Calendar events
   permission  Manage system permissions
   status      Show permission status
+  settings    Open iCLI settings
 ```
 
 Global option: `--format human|json|plain` (default: human)
@@ -53,9 +54,10 @@ icli reminder add "Read book" --notes "Start with chapter 3"
 
 Options:
 - `--list <name>` — target list (default: system default)
-- `--due <datetime>` — due date, accepts natural formats: `"tomorrow"`, `"2026-06-01"`, `"2026-06-01 14:00"`
-- `--priority low|medium|high`
+- `--due <datetime>` — due date: `today`, `tomorrow`, `yesterday`, `now`, ISO 8601, `YYYY-MM-DD`, `YYYY-MM-DD HH:mm`, or `YYYY-MM-DD HH:mm:ss`
+- `--priority none|low|medium|high`
 - `--notes <text>`
+- `--url <url>`
 
 ### Complete a reminder
 
@@ -72,6 +74,7 @@ Get IDs from `icli reminder list --format plain` (first column).
 icli reminder edit <id> --title "New title"
 icli reminder edit <id> --due "2026-07-01" --priority medium
 icli reminder edit <id> --due none          # clear due date
+icli reminder edit <id> --url none          # clear URL
 icli reminder edit <id> --list "Work"       # move to different list
 ```
 
@@ -113,7 +116,7 @@ icli calendar add "Meeting" --start "2026-06-04 10:00" --end "2026-06-04 11:00" 
 Options:
 - `--start <datetime>` — required
 - `--end <datetime>` — required
-- `--calendar <name>` — target calendar
+- `--calendar <name>` — target calendar; a missing name fails instead of using the default calendar
 - `--all-day` — all-day event (use date only for start/end)
 - `--location <text>`
 - `--notes <text>`
@@ -137,7 +140,7 @@ icli permission request            # request both Reminders + Calendar
 icli permission request --reminders
 icli permission request --calendars
 icli permission reset              # reset TCC permissions (then relaunch iCLI + re-request)
-icli permission settings           # open iCLI settings window
+icli settings                      # open iCLI settings window
 ```
 
 ---

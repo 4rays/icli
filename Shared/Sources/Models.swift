@@ -13,7 +13,7 @@ public enum ICLIError: Error, LocalizedError, Sendable {
   public var errorDescription: String? {
     switch self {
     case .accessDenied(let svc):
-      return "\(svc) access denied. Run 'icli auth request' to grant permission."
+      return "\(svc) access denied. Run 'icli permission request' to grant permission."
     case .listNotFound(let name):
       return "Reminder list not found: \(name)"
     case .reminderNotFound(let id):
