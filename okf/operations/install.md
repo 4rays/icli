@@ -4,7 +4,7 @@ title: Install
 description: Install the icli CLI and iCLI.app from source, or via the Homebrew cask named in the README.
 tags: [playbook, install]
 status: draft
-generated: { by: grok/okf, at: 2026-10-07T09:08:47Z }
+generated: { by: pi/gpt-6.1-sol, at: 2026-10-07T09:41:32Z }
 sources:
   - id: readme
     resource: /Users/kaishin/Developer/Spikes/icli/icli/README.md

@@ -4,7 +4,7 @@ title: CLI surface
 description: Top-level icli groups, aliases, global flags, and the three output formats.
 tags: [cli, commands]
 status: draft
-generated: { by: grok/okf, at: 2026-10-07T09:40:00Z }
+generated: { by: pi/gpt-6.1-sol, at: 2026-10-07T09:41:32Z }
 sources:
   - id: router
     resource: /Users/kaishin/Developer/Spikes/icli/icli/CLI/Sources/CommandRouter.swift

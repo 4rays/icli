@@ -4,7 +4,7 @@ title: Calendar commands
 description: icli calendar subcommands for listing calendars and events, and for adding or deleting one event.
 tags: [cli, calendar]
 status: draft
-generated: { by: grok/okf, at: 2026-10-07T09:40:00Z }
+generated: { by: pi/gpt-6.1-sol, at: 2026-10-07T09:41:32Z }
 sources:
   - id: group
     resource: /Users/kaishin/Developer/Spikes/icli/icli/CLI/Sources/Commands/CalendarCommand.swift

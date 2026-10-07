@@ -4,7 +4,7 @@ title: Permissions
 description: How iCLI requests Calendar and Reminders access and what the CLI reports when access is missing.
 tags: [playbook, tcc, permissions]
 status: draft
-generated: { by: grok/okf, at: 2026-10-07T09:40:00Z }
+generated: { by: pi/gpt-6.1-sol, at: 2026-10-07T09:41:32Z }
 sources:
   - id: readme
     resource: /Users/kaishin/Developer/Spikes/icli/icli/README.md

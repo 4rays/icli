@@ -4,7 +4,7 @@ title: IPC
 description: JSON request and response envelopes exchanged over the local Unix socket between icli and iCLI.app.
 tags: [api, ipc, json]
 status: draft
-generated: { by: grok/okf, at: 2026-10-07T09:08:47Z }
+generated: { by: pi/gpt-6.1-sol, at: 2026-10-07T09:41:32Z }
 sources:
   - id: ipc
     resource: /Users/kaishin/Developer/Spikes/icli/icli/Shared/Sources/IPC.swift

@@ -5,7 +5,7 @@ description: A macOS command-line interface for Apple Reminders and Calendar, ba
 tags: [product, macos, reminders, calendar]
 resource: /Users/kaishin/Developer/Spikes/icli/icli/README.md
 status: draft
-generated: { by: grok/okf, at: 2026-10-07T09:40:00Z }
+generated: { by: pi/gpt-6.1-sol, at: 2026-10-07T09:41:32Z }
 sources:
   - id: readme
     resource: /Users/kaishin/Developer/Spikes/icli/icli/README.md

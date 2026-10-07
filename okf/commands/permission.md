@@ -4,7 +4,7 @@ title: Permission commands
 description: Commands that report, request, or reset Reminders and Calendar access, and that open settings.
 tags: [cli, permissions, tcc]
 status: draft
-generated: { by: grok/okf, at: 2026-10-07T09:08:47Z }
+generated: { by: pi/gpt-6.1-sol, at: 2026-10-07T09:41:32Z }
 sources:
   - id: router
     resource: /Users/kaishin/Developer/Spikes/icli/icli/CLI/Sources/CommandRouter.swift
